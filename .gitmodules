@@ -1,0 +1,9 @@
+[submodule "modules/AniiModLoader"]
+	path = modules/AniiModLoader
+	url = https://github.com/CyrixJD115/AniiModLoader.git
+[submodule "modules/Serviimo"]
+	path = modules/Serviimo
+	url = https://github.com/CyrixJD115/Serviimo.git
+[submodule "modules/Apiimo"]
+	path = modules/Apiimo
+	url = https://github.com/CyrixJD115/Apiimo.git
