@@ -1,5 +1,9 @@
 # AniiStudio
 
+> ⚠️ **Heavily work in progress.** Some functions work, some don't. Any
+> contribution really helps — to AniiStudio itself or to any of the three
+> modules below; improvements on either side benefit both.
+
 Central hub for the Aniimo ecosystem — monorepo + desktop toolkit for managing
 saves pulled from the Aniimo servers, running Serviimo, and driving Apiimo.
 
