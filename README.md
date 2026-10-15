@@ -7,6 +7,11 @@
 Central hub for the Aniimo ecosystem — monorepo + desktop toolkit for managing
 saves pulled from the Aniimo servers, running Serviimo, and driving Apiimo.
 
+## Docs
+- [Legal notice](LEGAL.md) — ecosystem-wide: reverse-engineering statement, bring-your-own-game rule, acceptable use, DMCA policy
+- [Notice](NOTICE.md) — short-form disclaimer and attribution
+- [License](LICENSE) — GPL-3.0
+
 ## Layout
 
 | Path                  | What                                                        |
