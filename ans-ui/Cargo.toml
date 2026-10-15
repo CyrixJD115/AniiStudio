@@ -1,0 +1,16 @@
+[package]
+name = "ans-ui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "aniistudio"
+path = "src/main.rs"
+
+[dependencies]
+ans-core = { path = "../ans-core" }
+ans-apiimo = { path = "../ans-apiimo" }
+eframe = "0.36"
+egui = "0.36"
+env_logger = "0.11"
