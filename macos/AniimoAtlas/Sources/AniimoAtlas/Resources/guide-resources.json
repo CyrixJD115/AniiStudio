@@ -1,0 +1,194 @@
+[
+  {
+    "id": "homeland",
+    "title": "Homeland optimizer",
+    "category": "Homeland",
+    "detail": "Balance coins, EXP, Aniipods, workers, food and production chains.",
+    "path": "/homeland",
+    "symbol": "chart.xyaxis.line"
+  },
+  {
+    "id": "layouts",
+    "title": "Production layouts",
+    "category": "Homeland",
+    "detail": "Configure your RV and inspect the live planner\u2019s building layouts.",
+    "path": "/homeland#layout",
+    "symbol": "square.grid.3x3.fill"
+  },
+  {
+    "id": "recipes",
+    "title": "All recipes",
+    "category": "Homeland",
+    "detail": "Live recipe table, unlocks, inputs, rates and data corrections.",
+    "path": "/homeland/recipes",
+    "symbol": "book.closed.fill"
+  },
+  {
+    "id": "workers",
+    "title": "Worker recommendations",
+    "category": "Homeland",
+    "detail": "Job levels and recommended Aniimo for each facility.",
+    "path": "/homeland#workers",
+    "symbol": "pawprint.fill"
+  },
+  {
+    "id": "rv",
+    "title": "RV upgrades",
+    "category": "Homeland",
+    "detail": "Upgrade costs, prerequisites, capacity and facility unlocks.",
+    "path": "/homeland#rv-levels",
+    "symbol": "caravan.fill"
+  },
+  {
+    "id": "quick-wheat",
+    "title": "Quick Wheat walkthrough",
+    "category": "Homeland",
+    "detail": "Ecological Module and farmland requirements.",
+    "path": "/homeland#quick-wheat",
+    "symbol": "leaf.fill"
+  },
+  {
+    "id": "home-guide",
+    "title": "Homeland guide",
+    "category": "Homeland",
+    "detail": "Unlocking the RV, production and job basics.",
+    "path": "/news/aniimo-homeland-guide",
+    "symbol": "house.fill"
+  },
+  {
+    "id": "map",
+    "title": "Interactive map",
+    "category": "Planning",
+    "detail": "Explore regions and points of interest.",
+    "path": "/interactive-map",
+    "symbol": "map.fill"
+  },
+  {
+    "id": "team-builder",
+    "title": "Team builder",
+    "category": "Planning",
+    "detail": "Build a team using the site\u2019s interactive tools.",
+    "path": "/team-builder",
+    "symbol": "person.3.fill"
+  },
+  {
+    "id": "best-teams",
+    "title": "Best teams",
+    "category": "Planning",
+    "detail": "Community team recommendations.",
+    "path": "/best-teams",
+    "symbol": "person.2.fill"
+  },
+  {
+    "id": "tier-list",
+    "title": "Tier list",
+    "category": "Planning",
+    "detail": "Community rankings and build priorities.",
+    "path": "/tier-list",
+    "symbol": "list.number"
+  },
+  {
+    "id": "elements",
+    "title": "Element chart",
+    "category": "Planning",
+    "detail": "Element relationships and species by element.",
+    "path": "/elements",
+    "symbol": "bolt.fill"
+  },
+  {
+    "id": "aniidex",
+    "title": "Aniidex",
+    "category": "Database",
+    "detail": "Live Aniimo records and individual species pages.",
+    "path": "/aniidex",
+    "symbol": "square.grid.2x2.fill"
+  },
+  {
+    "id": "achievements",
+    "title": "Achievements",
+    "category": "Database",
+    "detail": "Completion goals and achievement references.",
+    "path": "/achievements",
+    "symbol": "trophy.fill"
+  },
+  {
+    "id": "aniipods",
+    "title": "Aniipods",
+    "category": "Database",
+    "detail": "Capture items and their uses.",
+    "path": "/aniipods",
+    "symbol": "shippingbox.fill"
+  },
+  {
+    "id": "eggs",
+    "title": "Eggs",
+    "category": "Database",
+    "detail": "Egg references and acquisition information.",
+    "path": "/eggs",
+    "symbol": "oval.fill"
+  },
+  {
+    "id": "held-items",
+    "title": "Held items",
+    "category": "Database",
+    "detail": "Equipment references for combat builds.",
+    "path": "/held-items",
+    "symbol": "backpack.fill"
+  },
+  {
+    "id": "outfits",
+    "title": "Outfits",
+    "category": "Database",
+    "detail": "Appearance and outfit references.",
+    "path": "/outfits",
+    "symbol": "tshirt.fill"
+  },
+  {
+    "id": "regions",
+    "title": "Regions",
+    "category": "Database",
+    "detail": "Regional references and exploration.",
+    "path": "/regions",
+    "symbol": "globe"
+  },
+  {
+    "id": "events",
+    "title": "Events",
+    "category": "Updates",
+    "detail": "Current activity guides and event schedules.",
+    "path": "/events",
+    "symbol": "calendar"
+  },
+  {
+    "id": "news",
+    "title": "News",
+    "category": "Updates",
+    "detail": "Latest community guides and news.",
+    "path": "/news",
+    "symbol": "newspaper.fill"
+  },
+  {
+    "id": "codes",
+    "title": "Codes",
+    "category": "Updates",
+    "detail": "Current redemption-code references.",
+    "path": "/codes",
+    "symbol": "gift.fill"
+  },
+  {
+    "id": "patch-notes",
+    "title": "Patch notes",
+    "category": "Updates",
+    "detail": "Balance and content updates.",
+    "path": "/patch-notes",
+    "symbol": "text.badge.checkmark"
+  },
+  {
+    "id": "system",
+    "title": "System requirements",
+    "category": "Updates",
+    "detail": "Platform specifications and compatibility.",
+    "path": "/system-requirements",
+    "symbol": "desktopcomputer"
+  }
+]

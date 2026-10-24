@@ -1,0 +1,15 @@
+.DS_Store
+.build/
+dist/
+__pycache__/
+*.pyc
+node_modules/
+
+# Game/user material stays local; source and public catalog JSON are included.
+captures/
+*.glb
+*.scn
+*.usdz
+*.xdf
+*.zst
+*.bc7-mips
