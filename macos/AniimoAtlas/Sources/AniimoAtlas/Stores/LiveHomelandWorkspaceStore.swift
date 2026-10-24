@@ -22,6 +22,7 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
     }
 
     @Published private(set) var state: State = .idle
+    @Published private(set) var selectedArea: HomelandCapturedArea?
 
     var isLoading: Bool {
         if case .loading = state { return true }
@@ -52,6 +53,7 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
 
     func readCurrentGame() async {
         guard !isLoading else { return }
+        selectedArea = nil
         state = .loading("Reading the running official Aniimo client without changing it…")
         do {
             let result = try await Task.detached(priority: .userInitiated) {
@@ -67,6 +69,7 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
 
     func loadCapturedArea(_ area: HomelandCapturedArea) async {
         guard !isLoading else { return }
+        selectedArea = area
         state = .loading("Reconstructing the captured \(area.title.lowercased()) with real models…")
         do {
             let folder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -81,8 +84,10 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
                 throw LiveHomelandError.missingOwnedCapture
             }
             let capture = try captureService.load(url: url)
-            let reference = try await sceneService.prepare(build: Self.currentBuild)
-            let origin = try captureService.verifyAmericas2020(capture, scene: reference.scene, catalog: catalog)
+            let referenceScene: HomelandLayoutScene
+            if let cached = sceneService.cachedScene(build: Self.currentBuild) { referenceScene = cached }
+            else { referenceScene = try await sceneService.prepare(build: Self.currentBuild).scene }
+            let origin = try captureService.verifyAmericas2020(capture, scene: referenceScene, catalog: catalog)
             guard origin.isExactMatch else { throw HomelandLiveCaptureError.incompatibleReference }
             let owned = try HomelandOwnedSceneService().materialize(capture: capture, catalog: catalog,
                 assets: HomelandAssetLibraryService().load(), origin: origin, area: area.rawValue)

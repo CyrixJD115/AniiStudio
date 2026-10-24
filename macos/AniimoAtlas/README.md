@@ -16,6 +16,7 @@ The build script stages clean resources, signs a local-use app, installs it in `
 - Build Library uses server-specific public Aniidex listing data and clean GLB placement manifests. Native layout rendering does not embed the listing webpage or its advertisements. Community source views remain attributed external content.
 - Content Index explicitly indexes an owned game installation, fingerprints relevant files, and caches bounded `pmdata.bin` BDD object/zone data. Cached browsing does not automatically rescan Documents or removable volumes.
 - The capture importer validates compact ornament records, resolves template/prefab identities, and retains recovered owning-map keys. Captured Areas exposes Production, Residential and Seasonal reconstructions.
+- Centered glass-style area tabs open those saved reconstructions, with Production as the initial area. Model files live in a durable Application Support library; valid older cache assets are migrated. Saved reconstruction uses the cached calibration manifest and does not require a running game, connected game drive or network refresh once the models are acquired.
 - Selected instances support local transform previews, persistent identity/source-bound drafts, undo/redo and reset. The green-outline implementation targets an individual instance, including thin adjacent floor tiles.
 - Recovered terrain/scenery context is a separate checksum-bound local package with embedded textures and exact transform restoration. Only an explicitly calibrated captured residential scene can attach this context; an arbitrary community layout is not treated as a verified world alignment. Original materials, foliage density, lighting, water and weather are not fully reproduced.
 - A detached translation candidate edits integer-centimetre position bytes while preserving the rest of the original record. It rejects missing identity and out-of-range coordinates and checks source identity for staleness. It is not connected to transport or a server.
@@ -29,6 +30,12 @@ The private local owning-map fixture contains 3,964 unique keyed records. After 
 The full local Swift suite reported 57 tests, six optional tests skipped, zero failures when the installed-data fixture was explicitly supplied. Without private fixtures, additional integration tests skip. Separate opt-in tests exercised actual native Production/Seasonal GPU renders and five recovered-world checks, including all 3,118 residential matrices, 11,273 world-node transforms and 513,788 terrain triangles. Tests use synthetic records where possible; live captures and game assets are not distributed.
 
 Optional inputs include `ANII_PMDATA_PATH` for a user-supplied installed-data fixture, `ANII_WORLD_CONTEXT_QA_DIR` for recovered scenery, `ANII_WORLD_CONTEXT_RENDER_DIR` for a native integration preview, `ANII_AREA_RENDER_DIR` for captured-area rendering, and `ANII_HOMELAND_QA_EXPORT_DIR` for an offline content export. Capture-dependent tests skip when local evidence is absent. Game patches can invalidate the snapshot's expected counts and mappings.
+
+The area-tab/model-library follow-up passed 59 tests, six optional checks skipped, zero failures. Its regression cases verify that removing the disposable cache leaves the migrated library usable and that a truncated GLB is not counted as available. The installed residential view was checked at 3,118/3,119 after restoring the downloaded models.
+
+## App icon
+
+Original vector artwork is defined in `script/generate_app_icon.swift`. Running it from the package root regenerates `Assets/AppIcon.png`, the resolution-specific iconset and `Assets/AppIcon.icns`. The build script packages the ICNS for Finder and the Dock. No third-party game artwork is used in the icon.
 
 ## Other companion features and data
 

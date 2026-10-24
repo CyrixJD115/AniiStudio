@@ -25,7 +25,7 @@ struct LiveHomelandWorkspaceView: View {
             Divider().opacity(0.45)
             content
         }
-        .task { await store.loadLatest() }
+        .task { await store.loadCapturedArea(.production) }
         .onChange(of: captureIdentity) { _, current in
             guard let current else { return }
             defer { lastCaptureIdentity = current }
@@ -56,6 +56,7 @@ struct LiveHomelandWorkspaceView: View {
     }
 
     private var liveHeader: some View {
+        VStack(alignment: .leading, spacing: 14) {
         HStack(spacing: 14) {
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
@@ -70,12 +71,6 @@ struct LiveHomelandWorkspaceView: View {
                     .font(.callout).foregroundStyle(.secondary)
             }
             Spacer()
-            Menu("Captured areas") {
-                ForEach(HomelandCapturedArea.allCases) { area in
-                    Button(area.title) { Task { await store.loadCapturedArea(area) } }
-                }
-            }
-            .disabled(store.isLoading)
             Button {
                 Task { await store.readCurrentGame() }
             } label: {
@@ -83,6 +78,35 @@ struct LiveHomelandWorkspaceView: View {
             }
             .buttonStyle(.borderedProminent)
             .disabled(store.isLoading)
+        }
+        HStack {
+            Spacer(minLength: 0)
+            HStack(spacing: 8) {
+                ForEach(HomelandCapturedArea.allCases) { area in
+                    Button {
+                        Task { await store.loadCapturedArea(area) }
+                    } label: {
+                        Label(area.tabTitle, systemImage: area.icon)
+                            .font(.callout.weight(.semibold))
+                            .padding(.horizontal, 18).padding(.vertical, 10)
+                            .foregroundStyle(store.selectedArea == area ? Color.white : Color.primary)
+                            .background(store.selectedArea == area
+                                ? AnyShapeStyle(LinearGradient(colors: [.indigo, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                : AnyShapeStyle(Color.clear), in: Capsule())
+                            .contentShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(area.title)
+                    .accessibilityAddTraits(store.selectedArea == area ? [.isSelected] : [])
+                    .help("View your captured \(area.title.lowercased())")
+                }
+            }
+            .padding(6)
+            .atlasGlass(cornerRadius: 18)
+            .disabled(store.isLoading)
+            Spacer(minLength: 0)
+        }
+        .animation(.snappy(duration: 0.25), value: store.selectedArea)
         }
         .padding(.horizontal, 24).padding(.vertical, 14)
     }

@@ -16,6 +16,7 @@ PACKAGE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/aniimo-atlas-package.XXXXXX")"
 trap 'rm -rf "$PACKAGE_DIR"' EXIT
 PACKAGE_APP="$PACKAGE_DIR/AniimoAtlas.app"
 mkdir -p "$PACKAGE_APP/Contents/MacOS" "$PACKAGE_APP/Contents/Resources" "$PACKAGE_APP/Contents/Frameworks" "$PACKAGE_APP/Contents/Helpers"
+cp "$PWD/Assets/AppIcon.icns" "$PACKAGE_APP/Contents/Resources/AppIcon.icns"
 cp "$BIN_DIR/AniimoAtlas" "$PACKAGE_APP/Contents/MacOS/"
 ditto --norsrc "$BIN_DIR/AniimoAtlas_AniimoAtlas.bundle" "$PACKAGE_APP/Contents/Resources/AniimoAtlas_AniimoAtlas.bundle"
 ditto --norsrc "$BIN_DIR/GLTFKit2.framework" "$PACKAGE_APP/Contents/Frameworks/GLTFKit2.framework"
@@ -30,7 +31,7 @@ if [[ -f "$CAPTURE_TOOL_ROOT/scan-lua-links.c" && -f "$CAPTURE_TOOL_ROOT/debugge
 fi
 install_name_tool -add_rpath "@executable_path/../Frameworks" "$PACKAGE_APP/Contents/MacOS/AniimoAtlas"
 cat > "$PACKAGE_APP/Contents/Info.plist" <<'PLIST'
-<?xml version="1.0" encoding="UTF-8"?><plist version="1.0"><dict><key>CFBundleExecutable</key><string>AniimoAtlas</string><key>CFBundleIdentifier</key><string>com.kevin.aniimoatlas</string><key>CFBundleName</key><string>Aniimo Atlas</string><key>CFBundlePackageType</key><string>APPL</string><key>LSMinimumSystemVersion</key><string>14.0</string><key>NSPrincipalClass</key><string>NSApplication</string></dict></plist>
+<?xml version="1.0" encoding="UTF-8"?><plist version="1.0"><dict><key>CFBundleExecutable</key><string>AniimoAtlas</string><key>CFBundleIdentifier</key><string>com.kevin.aniimoatlas</string><key>CFBundleName</key><string>Aniimo Atlas</string><key>CFBundleIconFile</key><string>AppIcon</string><key>CFBundlePackageType</key><string>APPL</string><key>LSMinimumSystemVersion</key><string>14.0</string><key>NSPrincipalClass</key><string>NSApplication</string></dict></plist>
 PLIST
 codesign --force --sign - "$PACKAGE_APP/Contents/Frameworks/GLTFKit2.framework"
 codesign --force --sign - "$PACKAGE_APP"

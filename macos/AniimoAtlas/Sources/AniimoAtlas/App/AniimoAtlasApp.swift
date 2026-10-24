@@ -9,6 +9,8 @@ import SwiftUI
 }
 final class Delegate: NSObject, NSApplicationDelegate {
  func applicationDidFinishLaunching(_ notification: Notification) {
+  if let url = Bundle.main.url(forResource: "AppIcon", withExtension: "icns"),
+     let image = NSImage(contentsOf: url) { NSApp.applicationIconImage = image }
   NSApp.setActivationPolicy(.regular); NSApp.activate(ignoringOtherApps: true)
  }
 }

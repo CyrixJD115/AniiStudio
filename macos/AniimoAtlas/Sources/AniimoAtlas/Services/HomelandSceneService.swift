@@ -17,9 +17,21 @@ enum HomelandSceneError: LocalizedError {
 struct HomelandSceneService {
     var session: URLSession = .shared
 
+    /// Saved owning-map scenes can verify calibration offline. Neither a
+    /// network refresh nor the removable game install is needed for this.
+    func cachedScene(build: HomelandBuild) -> HomelandLayoutScene? {
+        for root in [HomelandAssetLibraryService.durableRoot, HomelandAssetLibraryService.legacyRoot] {
+            let path = root.appendingPathComponent(build.id).appendingPathComponent("manifest.json")
+            guard let bytes = try? Data(contentsOf: path),
+                  let scene = try? JSONDecoder().decode(HomelandLayoutScene.self, from: bytes),
+                  (try? scene.validate()) != nil else { continue }
+            return scene
+        }
+        return nil
+    }
+
     func prepare(build: HomelandBuild) async throws -> HomelandScenePackage {
-        let root = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("AniimoAtlas/LayoutScenes/\(build.id)", isDirectory: true)
+        let root = HomelandAssetLibraryService.durableRoot.appendingPathComponent(build.id, isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
 
         var request = URLRequest(url: build.modelURL)
