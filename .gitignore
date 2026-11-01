@@ -13,3 +13,19 @@ captures/
 *.xdf
 *.zst
 *.bc7-mips
+
+# Local developer state, runtime captures and generated native binaries.
+.codex/
+macos/AniimoAtlas/work/
+*.obj
+*.lib
+*.dll
+*.exe
+macos/AniimoAtlas/tools/connection-bootstrap/purchase/session-config.h
+macos/AniimoAtlas/tools/connection-bootstrap/purchase/fragment.h
+
+# Extracted installed-game assets are regenerated locally, not published.
+macos/AniimoAtlas/Sources/AniimoAtlas/Resources/CreatureModels/
+macos/AniimoAtlas/Sources/AniimoAtlas/Resources/ItemArtwork/
+macos/AniimoAtlas/Sources/AniimoAtlas/Resources/Currencies/
+macos/AniimoAtlas/Sources/AniimoAtlas/Resources/PatchModels/

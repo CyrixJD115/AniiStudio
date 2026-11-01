@@ -3,9 +3,9 @@ import XCTest
 final class HomelandTests: XCTestCase {
  func testDatasetIntegrity() throws {
   let c = try HomelandCatalog.loadResult.get()
-  XCTAssertEqual(c.items.count, 218)
+  XCTAssertEqual(c.items.count, 271)
   XCTAssertEqual(c.facilities.count, 26)
-  XCTAssertEqual(Set(c.items.map(\.id)).count, 218)
+  XCTAssertEqual(Set(c.items.map(\.id)).count, 271)
   for item in c.items {
    XCTAssertNotNil(c.recipe(item.product), item.product)
    for id in item.ingredients.keys { XCTAssertNotNil(c.recipe(id), id) }
@@ -15,7 +15,7 @@ final class HomelandTests: XCTestCase {
   let c = try HomelandCatalog.loadResult.get()
   XCTAssertEqual(c.upgrade(from: 9, through: 10).coins, 510000)
   XCTAssertEqual(c.upgrade(from: 9, through: 10).items, ["rough_lumber": 2000, "coarse_sifted_ore": 2400])
-  XCTAssertEqual(c.upgrade(from: 20, through: 21).coins, 0)
+  XCTAssertEqual(c.upgrade(from: 20, through: 21).coins, 34300000)
   let result = c.rawNeeds(for: ["sintered_ore_brick": 1, "coarse_sifted_ore": 2], stock: ["coarse_sifted_ore": 3, "mineral_sand": 5])
   XCTAssertEqual(result.count, 1)
   XCTAssertEqual(result.first?.id, "mineral_sand")

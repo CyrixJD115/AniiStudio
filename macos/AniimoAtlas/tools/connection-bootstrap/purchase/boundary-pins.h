@@ -1,0 +1,7 @@
+static const unsigned char gameDoString[32]={72,137,92,36,8,87,72,131,236,48,72,139,250,72,139,217,51,210,185,185,44,0,0,232,4,52,87,255,132,192,117,47};
+static const unsigned char xluaEntry[32]={85,87,86,83,72,131,236,40,190,1,0,0,0,68,137,68,36,80,72,137,205,72,137,76,36,88,72,137,209,72,139,93};
+static const unsigned char captureExpected[32]={86,83,72,131,236,72,65,137,202,65,137,211,76,137,195,76,137,206,246,5,215,154,5,0,8,117,77,69,141,66,1,72};
+static const unsigned char threadRootExpected[32]={72,131,236,40,73,137,208,72,137,202,72,49,201,76,139,13,180,52,9,0,65,255,209,204,72,137,203,72,129,225,0,240};
+#define THREAD_ROOT_RVA 0xfb98UL
+#define THREAD_ROOT_END 0xfbb0UL
+#define CAPTURE_RVA 0x1b710UL

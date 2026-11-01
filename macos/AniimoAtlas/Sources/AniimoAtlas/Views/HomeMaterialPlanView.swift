@@ -27,11 +27,22 @@ struct HomeMaterialPlanView: View {
                 GroupBox("RV upgrade budget") {
                     VStack(alignment: .leading, spacing: 12) {
                         Toggle("Include RV upgrades", isOn: $includeUpgrade)
-                        Stepper("Target RV: \(targetRV)", value: $targetRV, in: store.rv...20)
+                        Stepper("Target RV: \(targetRV)", value: $targetRV, in: store.rv...catalog.maxRVLevel)
                         LabeledContent("Upgrade Home Coins", value: homeNumber(upgrade.coins))
                         HStack { Text("Home Coins owned"); Spacer(); TextField("0", value: $ownedCoins, format: .number).textFieldStyle(.roundedBorder).frame(width: 140) }
                         LabeledContent("Coins still needed", value: homeNumber(max(0, upgrade.coins - max(0, ownedCoins))))
                         Text("Material and coin costs only. Titles, quests, habitability and facility placement requirements must also be met in-game.").font(.caption).foregroundStyle(.secondary)
+                        if let level = InstalledRVUpgrades.current.rows.first(where: { $0.level == max(store.rv, targetRV) }) {
+                            DisclosureGroup("Current client requirements · RV \(level.level)") {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(level.unlocks)
+                                    Text("Worker capacity: \(level.workerCapacity) · Voucher collection limit: \(level.voucherCollectionLimit)")
+                                    Text("Upgrade duration: \(level.upgradeSeconds / 3600)h \((level.upgradeSeconds % 3600) / 60)m")
+                                    ForEach(Array(level.requirements.enumerated()), id: \.offset) { _, text in Text(text) }
+                                }.frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                        Text("RV costs, worker capacity, facility limits and module RV levels use the current client. Recipe rates remain guide estimates; in-game unlock conditions still apply.").font(.caption).foregroundStyle(.secondary)
                         Link("See all RV unlock requirements", destination: URL(string: "https://aniimoguide.com/homeland#rv-levels")!)
                     }.padding(10)
                 }
@@ -40,7 +51,7 @@ struct HomeMaterialPlanView: View {
                         if store.targets.isEmpty { Text("Add targets from Recipes to include them here.").foregroundStyle(.secondary) }
                         ForEach(store.targets.keys.sorted(), id: \.self) { id in
                             HStack {
-                                Text(catalog.name(id)); Spacer()
+                                HomelandItemIcon(name:catalog.name(id),recipeID:id,size:28); Text(catalog.name(id)); Spacer()
                                 Text(homeNumber(store.targets[id, default: 0]))
                                 Button { store.targets.removeValue(forKey: id) } label: { Image(systemName: "minus.circle") }.help("Remove target")
                             }
@@ -51,7 +62,7 @@ struct HomeMaterialPlanView: View {
                     VStack(spacing: 10) {
                         ForEach(inventoryIDs, id: \.self) { id in
                             HStack {
-                                Text(catalog.name(id)); Spacer()
+                                HomelandItemIcon(name:catalog.name(id),recipeID:id,size:28); Text(catalog.name(id)); Spacer()
                                 TextField("0", value: Binding(get: { store.stock[id, default: 0] }, set: { store.stock[id] = $0.isFinite ? max(0, $0) : 0 }), format: .number)
                                     .textFieldStyle(.roundedBorder).frame(width: 130).accessibilityLabel("\(catalog.name(id)) owned")
                             }
@@ -63,7 +74,7 @@ struct HomeMaterialPlanView: View {
                         let needs = catalog.rawNeeds(for: requested, stock: store.stock)
                         if needs.isEmpty { Label("Your entered material stock covers this plan.", systemImage: "checkmark.circle.fill").foregroundStyle(.green) }
                         ForEach(needs) { need in
-                            HStack { Text(catalog.name(need.id)); Spacer(); Text(homeNumber(need.quantity)).bold().monospacedDigit() }
+                            HStack { HomelandItemIcon(name:catalog.name(need.id),recipeID:need.id,size:28); Text(catalog.name(need.id)); Spacer(); Text(homeNumber(need.quantity)).bold().monospacedDigit() }
                         }
                         Text("Uses standard recipe chains and whole batches, reuses batch surplus, and deducts stock once. Mineral Sand and Wood Blocks remain raw byproduct targets; see Recipes for their harvest sources. Seed, food and facility-building costs are not included.").font(.caption).foregroundStyle(.secondary)
                     }.padding(10)
@@ -71,7 +82,7 @@ struct HomeMaterialPlanView: View {
                 ShareLink("Share shopping list", item: summary).buttonStyle(.borderedProminent)
             }.padding(28).frame(maxWidth: 900, alignment: .leading)
         }
-        .onAppear { targetRV = min(20, store.rv + 1) }
+        .onAppear { targetRV = min(catalog.maxRVLevel, store.rv + 1) }
         .onChange(of: store.rv) { _, rv in targetRV = max(rv, targetRV) }
     }
 }

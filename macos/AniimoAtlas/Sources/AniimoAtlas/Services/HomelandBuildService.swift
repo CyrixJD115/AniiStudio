@@ -15,6 +15,64 @@ enum HomelandBuildServiceError: LocalizedError {
 struct HomelandBuildService {
     var session: URLSession = .shared
 
+    /// The website paginates this public feed in the browser. Its HTML
+    /// response can repeat page one even for ?page=2, so full sync uses the
+    /// same complete feed instead of treating repeated HTML as new pages.
+    func fetchAll(server: HomelandServer) async throws -> [HomelandBuild] {
+        var components = URLComponents(string: "https://aniidex.com/api/homeland/layout-codes")!
+        components.queryItems = [.init(name: "server", value: server.rawValue), .init(name: "locale", value: "en")]
+        var request = URLRequest(url: components.url!)
+        request.timeoutInterval = 30
+        request.setValue("Aniimo Atlas/2.0 (personal macOS companion)", forHTTPHeaderField: "User-Agent")
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode),
+              response.url?.scheme == "https", response.url?.host == "aniidex.com" else {
+            throw HomelandBuildServiceError.badResponse
+        }
+        return try Self.parseCatalog(data: data, server: server)
+    }
+
+    static func parseCatalog(data: Data, server: HomelandServer) throws -> [HomelandBuild] {
+        struct Card: Decodable {
+            let server: String
+            let n: Int
+            let kind: String
+            let designer: String
+            let rv: Int?
+            let likes: Int?
+            let picture: String?
+            let pieces: Int?
+            let cost: [String: Int]?
+        }
+        struct Feed: Decodable { let cards: [Card]; let counts: [String: Int] }
+        guard data.count <= 8 * 1024 * 1024 else { throw HomelandBuildServiceError.badResponse }
+        let feed = try JSONDecoder().decode(Feed.self, from: data)
+        guard let expected = feed.counts[server.rawValue], expected >= 0, expected <= 100_000,
+              feed.cards.count == expected else { throw HomelandBuildServiceError.unexpectedPage }
+        var seen = Set<Int>()
+        let kinds = ["block-art": "Pixel Art", "facility": "Facility", "garden": "Garden",
+                     "house": "House", "room": "Room", "scene": "Scene"]
+        return try feed.cards.map { card in
+            guard card.server == server.rawValue, card.n > 0, seen.insert(card.n).inserted,
+                  (card.rv ?? 0) >= 0, (card.likes ?? 0) >= 0, (card.pieces ?? 0) >= 0,
+                  (card.cost ?? [:]).allSatisfy({ Int64($0.key).map { $0 > 0 } == true && $0.value >= 0 }) else {
+                throw HomelandBuildServiceError.unexpectedPage
+            }
+            var preview: URL?
+            if let path = card.picture {
+                guard path.hasPrefix("/images/homeland/layouts/\(server.rawValue)/"),
+                      !path.contains(".."), let url = URL(string: "https://aniidex.com\(path)"),
+                      url.host == "aniidex.com", url.pathExtension == "webp" else {
+                    throw HomelandBuildServiceError.unexpectedPage
+                }
+                preview = url
+            }
+            return HomelandBuild(server: server, number: card.n,
+                kind: kinds[card.kind] ?? card.kind, designer: card.designer,
+                rvLevel: card.rv, likes: card.likes ?? 0, previewURL: preview, pieceCount: card.pieces, configuredCosts: card.cost)
+        }.sorted { $0.number > $1.number }
+    }
+
     func fetchPage(server: HomelandServer, page: Int) async throws -> HomelandBuildPage {
         var components = URLComponents(string: "https://aniidex.com/homeland/layout-codes/\(server.rawValue)/")!
         if page > 1 { components.queryItems = [URLQueryItem(name: "page", value: String(page))] }

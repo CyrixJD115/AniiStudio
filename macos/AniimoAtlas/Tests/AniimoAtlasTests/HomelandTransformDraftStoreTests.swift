@@ -48,6 +48,32 @@ final class HomelandTransformDraftStoreTests: XCTestCase {
         }
     }
 
+    func testUnreadablePrimaryRecoversBackupAndPreservesOriginalOnNextEdit() async throws {
+        try await MainActor.run {
+            let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let url = directory.appendingPathComponent("drafts.json")
+            let object = placement(id: "prefab#0", record: "original")
+            let store = HomelandTransformDraftStore(url: url)
+            var first = baseline; first.positionX = 2
+            store.set(first, baseline: baseline, placement: object)
+            var second = first; second.positionX = 3
+            store.set(second, baseline: baseline, placement: object)
+            let broken = Data("interrupted file".utf8)
+            try broken.write(to: url)
+            let recovered = HomelandTransformDraftStore(url: url)
+            XCTAssertEqual(recovered.draft(for: object)?.transform, first)
+            XCTAssertNotNil(recovered.recoveryMessage)
+            recovered.set(second, baseline: baseline, placement: object)
+            XCTAssertNil(recovered.persistenceError)
+            let preserved = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+                .filter { $0.lastPathComponent.hasPrefix("unreadable-") }
+            XCTAssertEqual(preserved.count, 1)
+            XCTAssertEqual(try Data(contentsOf: XCTUnwrap(preserved.first)), broken)
+            XCTAssertEqual(HomelandTransformDraftStore(url: url).draft(for: object)?.transform, second)
+        }
+    }
+
     private var baseline: HomelandSceneTransform {
         HomelandSceneTransform(positionX: 0, positionY: 0, positionZ: 0,
             rotationX: 0, rotationY: 0, rotationZ: 0, scaleX: 1, scaleY: 1, scaleZ: 1)

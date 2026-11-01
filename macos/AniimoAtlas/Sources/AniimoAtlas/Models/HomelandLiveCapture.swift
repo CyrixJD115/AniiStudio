@@ -58,6 +58,17 @@ struct HomelandLiveCapture: Equatable {
     let rows: [HomelandLiveCaptureRow]
     let rejectedLineCount: Int
 
+    func hasSameOwnedPlacements(as other:Self) -> Bool {
+        guard rows.count==other.rows.count,rejectedLineCount==0,other.rejectedLineCount==0 else{return false}
+        var records:[UInt64:String]=[:]
+        for row in rows {guard let key=row.owningMapKey,records.updateValue(row.encoded,forKey:key)==nil else{return false}}
+        var seen=Set<UInt64>()
+        return other.rows.allSatisfy { row in
+            guard let key=row.owningMapKey,seen.insert(key).inserted else{return false}
+            return records[key]==row.encoded
+        }
+    }
+
     var plausibleRows: [HomelandLiveCaptureRow] {
         rows.filter { $0.hasPlausibleTransform && $0.ornament != nil }
     }
@@ -91,6 +102,10 @@ struct HomelandRenderedPlacement: Equatable, Identifiable {
     let captureAddress: String?
     let encodedRecord: String
     let serverInstanceID: UInt64?
+
+    static func matching(in placements: [String: Self], homeID: UInt32) -> [Self] {
+        placements.values.filter { $0.homeID == homeID }.sorted { $0.ordinal < $1.ordinal }
+    }
 
     func assigningServerInstanceID(_ value: UInt64) -> HomelandRenderedPlacement {
         HomelandRenderedPlacement(

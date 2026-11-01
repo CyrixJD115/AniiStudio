@@ -16,10 +16,10 @@ enum GameContentIndexError: LocalizedError {
 struct GameContentIndexService {
     private static let artifactPaths = [
         "Aniimo.exe",
+        "GameAssembly.dll",
         "Aniimo_Data/globalgamemanagers",
         "Aniimo_Data/resources.assets",
-        "Aniimo_Data/cvs/res/lua/LuaScripts.xdf",
-        "Aniimo_Data/cvs/res/lua/LuaScripts/Common/Data/pmdata.bin"
+        "verlist.txt"
     ]
 
     private static let tableSignals = [
@@ -36,13 +36,14 @@ struct GameContentIndexService {
         }
         let counts = try catalogCounts()
         let catalogDigest = try bundledCatalogDigest()
-        let artifacts = try fingerprintArtifacts(root: root)
+        let luaSource = try InstalledLuaSource.resolve(gameRoot: root)
+        let artifacts = try fingerprintArtifacts(root: root, luaSource: luaSource)
         let installedDigest = artifacts.isEmpty ? nil : digest(
             artifacts.map { "\($0.relativePath)|\($0.byteCount)|\($0.sha256)" }.joined(separator: "\n").data(using: .utf8) ?? Data()
         )
         let previous = loadCurrentSnapshot()
-        let signals = readStaticTableSignals(root: root)
-        let staticIndex = decodeStaticIndex(root: root)
+        let signals = readStaticTableSignals(pmdataURL: luaSource.pmdataURL)
+        let staticIndex = decodeStaticIndex(pmdataURL: luaSource.pmdataURL)
         let snapshot = GameContentIndexSnapshot(
             gameRoot: root.path,
             scannedAt: Date(),
@@ -57,6 +58,10 @@ struct GameContentIndexService {
         try persist(snapshot)
         if let objectCatalog = staticIndex.objectCatalog, let installedDigest {
             try persistObjectCatalog(objectCatalog, buildDigest: installedDigest)
+            // Missing language data must not discard the successful static index.
+            // A cached language file is shown only when its build digest matches.
+            _ = try? HomelandLocalizationService().index(gameRoot: root,
+                catalog: CachedHomelandObjectCatalog(buildDigest: installedDigest, indexedAt: Date(), catalog: objectCatalog))
         }
         return snapshot
     }
@@ -108,9 +113,10 @@ struct GameContentIndexService {
         return digest(data)
     }
 
-    private func fingerprintArtifacts(root: URL) throws -> [GameArtifactFingerprint] {
-        try Self.artifactPaths.compactMap { relativePath in
-            let url = root.appendingPathComponent(relativePath)
+    private func fingerprintArtifacts(root: URL, luaSource: InstalledLuaSource) throws -> [GameArtifactFingerprint] {
+        let paths = Self.artifactPaths + [luaSource.archiveRelativePath, InstalledLuaSource.pmdataFingerprintPath]
+        return try paths.compactMap { relativePath in
+            let url = relativePath == InstalledLuaSource.pmdataFingerprintPath ? luaSource.pmdataURL : root.appendingPathComponent(relativePath)
             guard FileManager.default.fileExists(atPath: url.path) else { return nil }
             let values = try url.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey])
             let data = try Data(contentsOf: url, options: .mappedIfSafe)
@@ -123,8 +129,7 @@ struct GameContentIndexService {
         }
     }
 
-    private func readStaticTableSignals(root: URL) -> [String] {
-        let url = root.appendingPathComponent("Aniimo_Data/cvs/res/lua/LuaScripts/Common/Data/pmdata.bin")
+    private func readStaticTableSignals(pmdataURL url: URL) -> [String] {
         guard let data = try? Data(contentsOf: url, options: .mappedIfSafe) else { return [] }
         return Self.tableSignals.filter { signal in
             guard let bytes = signal.data(using: .utf8) else { return false }
@@ -132,8 +137,7 @@ struct GameContentIndexService {
         }
     }
 
-    private func decodeStaticIndex(root: URL) -> (counts: [String: Int], objectCatalog: HomelandObjectCatalog?) {
-        let url = root.appendingPathComponent("Aniimo_Data/cvs/res/lua/LuaScripts/Common/Data/pmdata.bin")
+    private func decodeStaticIndex(pmdataURL url: URL) -> (counts: [String: Int], objectCatalog: HomelandObjectCatalog?) {
         guard let zones = try? HomelandZoneCatalogService().loadCurrentMap(pmdataURL: url),
               let objects = try? HomelandObjectCatalogService().load(pmdataURL: url) else { return ([:], nil) }
         return ([

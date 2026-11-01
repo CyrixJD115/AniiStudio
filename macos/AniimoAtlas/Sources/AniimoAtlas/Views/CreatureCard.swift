@@ -11,6 +11,7 @@ struct CreatureCard: View {
     HStack {
      Text("NO. \(creature.entryId)").font(.system(size: 10, design: .monospaced)).foregroundStyle(.secondary)
      Spacer()
+     if creature.hasNewPatchForm { Text("New").font(.caption2.bold()).foregroundStyle(.mint) }
      if favorite { Image(systemName: "star.fill").font(.caption2).foregroundStyle(.yellow) }
     }
     CreatureArt(creature: creature).frame(height: 116)

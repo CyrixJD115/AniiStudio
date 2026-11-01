@@ -1,5 +1,32 @@
 # Aniimo Atlas roadmap
 
+## Next priority — live placement and saved combos (October 25)
+
+Implementation underway; installed progress and remaining acceptance are recorded below:
+
+- Replace the build-only placement preview with the player's actual live 3D scene for each zone: Production, Residential, and Seasonal. Include current furniture, real area transforms, terrain and unlocked boundaries; show capture freshness and missing-model coverage. An offline snapshot must be clearly identified as historical.
+- Let the user drag and drop the complete build onto that map, rotate it as one unit, and preview its real scale and footprint. Preserve every relative block position; no coordinate typing or manual block assembly should be necessary.
+- Check current ownership, missing-piece prices/materials, area eligibility, capacity, boundaries, and collisions at the chosen location; revalidate immediately before a game change.
+- Offer two explicit destinations in the app: **Place in Homeland** or **Save to in-game Combos**. Direct placement must retain whole-build identity so all imported pieces can be selected and moved together.
+- Investigate the game's normal saved-combo API to add a generated or selected build directly to the game's build menu without typing a code. This is separate from Atlas local favorites, local layout files, and temporary multi-selection. Do not claim this is implemented or a permanent group merely because selection works.
+- Account for the user's reported **15 saved combos at a time**: verify the live limit and how slots are counted, display occupied/available slots, and let the user choose a replacement only when necessary. Never silently delete or overwrite a saved combo. This slot limit is distinct from per-build piece limits.
+- Keep the full purchase → placement preview → direct place / saved-combo flow inside Atlas. No website or code entry should be required for the generated Apple design or native import path.
+- Acceptance: demonstrate accurate scene context in each supported zone; drag-drop and move a whole build without including nearby items; independently verify placement/group identity and leave-return/restart persistence; demonstrate a genuine game-menu saved combo and full-slot handling. Preserve existing builds and avoid duplicate purchases/imports.
+
+Current verified checkpoint: the 408-block Golden Gate Apple was placed in Residential and all 408 exact block IDs were selected together through the normal editor; Kevin visually confirmed both. A permanent saved-game combo/group has **not** been created. See `Research/2026-10-25/golden-gate-apple/RESULT.md` at the workspace root. Older roadmap status paragraphs below predate this checkpoint.
+
+## Installed placement and combo update — October 25, late evening
+
+- Installed and restarted normal AniimoAtlas.app; deep strict signature verification passed. 125 Swift tests passed with 6 optional skips, zero failures. Log: /tmp/atlas-all-zones-combos-tests.log.
+- Requirements sheet now has a sticky action footer and explicit Place in Homeland / Save to in-game Combos destinations. Already-imported Apple no longer invites a duplicate purchase/import. Its receipt restores Residential and offers Select whole build in game.
+- Whole-build selection V4 uses exact imported IDs after user movement, supports areas 0/1/2, refuses unrelated selection and requires the normal game Multi-Select panel. Earlier exact Apple408 selection remains user-confirmed; new GUI refuses correctly while panel closed. No new selection/movement dispatched in this update.
+- Native live Residential map visibly loaded: 4151/4153 records rendered, 2 models missing, unlocked plot outlines displayed. Initial refresh failed after restart; explicit retry succeeded. Refresh failures need further reliability work; do not describe as continuous live streaming.
+- Production/Residential/Seasonal capture, whole-preview drag, coordinate-frame conversion, unlocked boundaries, and suggested anchor implemented. Seasonal normal live checkBatch returned valid for one available block, with NO place call. Seasonal placement itself untested.
+- Native combo adapter V2 registered and read-only library verified: 11/15 My combos, 6/15 saved shared, max500 pieces. Native UI displays real counts and Apple name/save action. No combo save sent. Normal own-combo save produces a SHAREABLE game code; explicit app confirmation explains that. Unplaced custom layouts cannot yet save through normal API because it requires existing placed IDs. Shared builds can use an already-revealed code without typing it.
+- Combo saves use fresh capacity checks, durable one-shot journal and independent list readback. Full libraries are blocked without overwriting: user must free a chosen slot in game; native replacement chooser remains pending.
+- No purchases, duplicate imports, movements, combo deletion, or website publication in this update. Existing Apple journal MUST NOT be resent; its historical anchor may differ from user's current placement.
+- Remaining acceptance: all-zone visual coverage, actual saved-combo create/readback and restart persistence. Do not claim these from mock tests or UI availability.
+
 ## Homeland build library
 
 - Native Aniidex browser for Americas, Europe and Asia-Pacific with server-safe filtering.
@@ -40,3 +67,12 @@ This work is intentionally staged so a discovery mistake cannot corrupt a player
 9. Convert or inject a community build only after item ownership, area limits, RV requirements and placement bounds pass validation.
 
 Current boundary: Atlas decodes installed static data and reconstructs captured live placement records with recovered owning-map identities. Local drafts and detached byte-preserving translation candidates are implemented; game/server writeback, progression editing and save synchronization remain unimplemented. See the source README for current validation and artifact boundaries.
+
+
+## Verified direct storage — October 26
+
+- Completed: six matching white entrance tiles placed for 36 Bud Tickets; two original paving pieces returned to inventory through the normal Store RPC without opening Multi-Select or clicking Store in the game. Planters and other placements preserved.
+- Native Store requires exact instance/template/area/transform checks, normal game eligibility, a durable nonce claim, successful callback, inventory returns, and unchanged surrounding placements. Uncertain operations are never automatically resent.
+- Installed controls: Store in inventory in the live inspector and Store whole build for imported builds. Ownership-bound registration refreshes for a new Homeland context; old transaction records remain preserved.
+- Validation: 126 Swift tests, 6 optional skips, no failures; storage and library Lua mocks passed; installed app passed strict signing verification. Runtime storage and six-tile import independently read back.
+- Follow-up: update assembly membership when a build's original pieces are deliberately replaced; retain original purchase/import audit records. Fix the existing intermittent SwiftUI placement-sheet layout stall.

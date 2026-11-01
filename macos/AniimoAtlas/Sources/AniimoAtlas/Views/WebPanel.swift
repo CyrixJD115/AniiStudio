@@ -46,12 +46,26 @@ private struct EmbeddedWeb: NSViewRepresentable {
     let url: URL
     @ObservedObject var state: WebLoadState
     func makeNSView(context: Context) -> WKWebView {
-        let view = WKWebView()
+        let config = WKWebViewConfiguration()
+        let view = WKWebView(frame: .zero, configuration: config)
         view.allowsBackForwardNavigationGestures = true
         view.navigationDelegate = context.coordinator
         view.uiDelegate = context.coordinator
         state.webView = view
-        view.load(URLRequest(url: url))
+        if url.host == "aniidex.com", url.path.hasPrefix("/map") {
+            WKContentRuleListStore.default().compileContentRuleList(forIdentifier: "AniimoAtlas-map-ads-v1", encodedContentRuleList: MapAdFilter.rules) { [weak view] rules, error in
+                Task { @MainActor in
+                    guard let view else { return }
+                    guard let rules else {
+                        state.error = "Could not prepare the map view: \(error?.localizedDescription ?? "content rule compilation failed")"
+                        state.loading = false
+                        return
+                    }
+                    view.configuration.userContentController.add(rules)
+                    view.load(URLRequest(url: url))
+                }
+            }
+        } else { view.load(URLRequest(url: url)) }
         return view
     }
     func updateNSView(_ view: WKWebView, context: Context) {
@@ -76,4 +90,11 @@ private struct EmbeddedWeb: NSViewRepresentable {
             return nil
         }
     }
+}
+
+/// Source-specific ad requests observed in the hosted map HTML.
+enum MapAdFilter {
+    // The map's public HTML loads s.nitropay.com/ads-2668.js. Block the ad
+    // provider at request time while preserving the map and source attribution.
+    static let rules = #"[{"trigger":{"url-filter":"^https?://([^/]+\\.)?nitropay\\.com/","if-domain":["aniidex.com","*.aniidex.com"]},"action":{"type":"block"}}]"#
 }

@@ -14,14 +14,20 @@ private enum HomelandObjectFilter: String, CaseIterable, Identifiable {
 struct HomelandObjectCatalogView: View {
     @StateObject private var store = HomelandObjectCatalogStore()
     @State private var query = ""
+    @State private var newOnly = false
     @State private var filter: HomelandObjectFilter = .all
     @State private var selectedID: UInt32?
     @State private var assets: [String: HomelandCachedAsset] = [:]
+
+    init(initialSelection: UInt32? = nil) {
+        _selectedID = State(initialValue: initialSelection)
+    }
 
     private var objects: [HomelandObjectDefinition] {
         guard let all = store.cached?.catalog.objects else { return [] }
         return all.filter { object in
             let matchesQuery = query.isEmpty
+                || (store.localization?.name(for: object)?.localizedCaseInsensitiveContains(query) ?? false)
                 || String(object.id).localizedCaseInsensitiveContains(query)
                 || (object.prefabName?.localizedCaseInsensitiveContains(query) ?? false)
                 || (object.facilityID.map(String.init)?.contains(query) ?? false)
@@ -34,7 +40,7 @@ struct HomelandObjectCatalogView: View {
             case .upgrades: matchesFilter = object.upgradeLevel != nil
             case .models: matchesFilter = object.prefabName.flatMap { assets[$0] } != nil
             }
-            return matchesQuery && matchesFilter
+            return matchesQuery && matchesFilter && (!newOnly || PatchContent.current.newHomelandIDs.contains(object.id))
         }
     }
 
@@ -67,12 +73,13 @@ struct HomelandObjectCatalogView: View {
                 }
                 TextField("Search object ID, prefab, or facility ID", text: $query)
                     .textFieldStyle(.roundedBorder)
+                Toggle("New in this update (\(PatchContent.current.newHomelandIDs.count))", isOn: $newOnly).toggleStyle(.checkbox)
                 Picker("Filter", selection: $filter) {
                     ForEach(HomelandObjectFilter.allCases) { Text($0.rawValue).tag($0) }
                 }
                 .pickerStyle(.segmented).labelsHidden()
                 List(objects, selection: $selectedID) { object in
-                    HomelandObjectRow(object: object)
+                    HomelandObjectRow(object: object, name: store.localization?.name(for: object))
                         .tag(object.id)
                 }
             }
@@ -80,7 +87,7 @@ struct HomelandObjectCatalogView: View {
             .frame(minWidth: 390, idealWidth: 470)
 
             if let object = selectedObject(in: cached.catalog) {
-                HomelandObjectDetail(object: object, asset: object.prefabName.flatMap { assets[$0] })
+                HomelandObjectDetail(object: object, name: store.localization?.name(for: object), description: store.localization?.description(for: object), currencyName: store.localization?.currencyName(for: object.buyCurrencyID), purchaseItemNames: store.localization?.currencyNames ?? [:], asset: object.prefabName.flatMap { assets[$0] })
             } else {
                 ContentUnavailableView("Select an object", systemImage: "cube.transparent", description: Text("Inspect exact installed-game placement, cost, facility, prefab, and upgrade metadata."))
             }
@@ -95,10 +102,15 @@ struct HomelandObjectCatalogView: View {
 
 private struct HomelandObjectRow: View {
     let object: HomelandObjectDefinition
+    let name: String?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(object.prefabName ?? "Object \(object.id)").font(.callout.weight(.medium)).lineLimit(1)
+        HStack(spacing:10) {
+          HomelandItemIcon(id:object.id,size:36)
+          VStack(alignment: .leading, spacing: 3) {
+            HStack { Text(name ?? object.prefabName ?? "Object \(object.id)").font(.callout.weight(.medium)).lineLimit(1)
+                if PatchContent.current.newHomelandIDs.contains(object.id) { Text("New").font(.caption2.bold()).foregroundStyle(.mint) }
+            }
             HStack(spacing: 7) {
                 Text(String(object.id)).monospaced()
                 if let level = object.upgradeLevel { Text("Lv \(level)") }
@@ -106,12 +118,17 @@ private struct HomelandObjectRow: View {
             }
             .font(.caption2).foregroundStyle(.secondary)
         }
+          }
         .padding(.vertical, 3)
     }
 }
 
 private struct HomelandObjectDetail: View {
     let object: HomelandObjectDefinition
+    let name: String?
+    let description: String?
+    let currencyName: String?
+    let purchaseItemNames: [String: String]
     let asset: HomelandCachedAsset?
 
     var body: some View {
@@ -119,14 +136,16 @@ private struct HomelandObjectDetail: View {
             VStack(alignment: .leading, spacing: 18) {
                 Image(systemName: object.isFacility ? "hammer.fill" : "cube.transparent.fill")
                     .font(.system(size: 28)).foregroundStyle(.cyan)
-                Text(object.prefabName ?? "Homeland object").font(.largeTitle.bold()).textSelection(.enabled)
+                Text(name ?? object.prefabName ?? "Homeland object").font(.largeTitle.bold()).textSelection(.enabled)
+                if let description, !description.isEmpty { Text(description).font(.callout).textSelection(.enabled) }
                 Text("Template ID \(object.id)").font(.headline.monospaced()).foregroundStyle(.secondary)
                 if let asset {
                     HomelandScenePackageView(package: previewPackage(asset))
                         .frame(height: 300)
                         .id(object.id)
-                    Text("Real game model · cached from \(asset.sourceLayout) · drag to orbit")
+                    Text("Game geometry · \(asset.sourceLayout) · drag to orbit")
                         .font(.caption).foregroundStyle(.secondary)
+                    if let note = asset.renderNote { Text(note).font(.caption2).foregroundStyle(.secondary) }
                 } else {
                     Label("3D model not cached yet", systemImage: "cube.transparent")
                         .font(.callout).foregroundStyle(.secondary)
@@ -141,7 +160,11 @@ private struct HomelandObjectDetail: View {
                     ("Homeland placeable", object.canPlaceInHomeland ? "Yes" : "No"),
                     ("Areas", object.homelandAreaIDs.map(String.init).joined(separator: ", ").nilIfEmpty ?? "Not declared"),
                     ("Bounds", boundsText),
-                    ("Maximum count", object.maximumCount.map(String.init) ?? "Not declared")
+                    ("Maximum count", object.maximumCount.map(String.init) ?? "Not declared"),
+                    ("Scale range", object.minimumScale.flatMap { low in object.maximumScale.map { high in "\(low.formatted())× – \(high.formatted())×" } } ?? "Not declared"),
+                    ("Vertical adjustment", object.allowsVerticalAdjustment.map { $0 ? "Supported" : "Not supported" } ?? "Not declared"),
+                    ("Independent axis rotation", object.allowsThreeAxisRotation.map { $0 ? "Supported" : "Not supported" } ?? "Not declared"),
+                    ("Independent axis scaling", object.allowsThreeAxisScale.map { $0 ? "Supported" : "Not supported" } ?? "Not declared")
                 ])
                 detailGroup("Facility & upgrade", rows: [
                     ("Facility ID", object.facilityID.map(String.init) ?? "—"),
@@ -150,10 +173,15 @@ private struct HomelandObjectDetail: View {
                     ("Current template level", object.upgradeLevel.map(String.init) ?? "—")
                 ])
                 detailGroup("Acquisition", rows: [
-                    ("Currency ID", object.buyCurrencyID.map(String.init) ?? "—"),
-                    ("Configured price", object.buyAmount?.formatted() ?? "—")
+                    ("Currency", currencyName ?? (object.buyCurrencyID == nil ? "—" : "Not indexed")),
+                    ("Configured price", object.buyCurrencyID == nil ? "Not currently configured" : (object.buyAmount?.formatted() ?? "—"))
                 ])
-                Text("Source: the exact fingerprinted pmdata.bin from the selected installed build. Numeric localization keys remain explicit until their matching language table is decoded.")
+                if let costs = object.materialCosts, !costs.isEmpty {
+                    detailGroup("Configured material requirements", rows: costs.map { cost in
+                        (purchaseItemNames[String(cost.itemID)] ?? "Item \(cost.itemID)", cost.amount.formatted())
+                    })
+                }
+                Text(name == nil ? "The matching English name is not indexed for this game build. The resource name is shown above." : "Name and description come from this indexed game build’s shipped English text. Configured prices may differ from current shop offers.")
                     .font(.caption).foregroundStyle(.secondary)
             }
             .padding(28).frame(maxWidth: 760, alignment: .leading)
@@ -170,7 +198,7 @@ private struct HomelandObjectDetail: View {
         let scene = HomelandLayoutScene(n: Int(object.id),
             plot: HomelandLayoutPlot(center: [0, 0, 0], size: [12, 12]),
             placements: [asset.prefab: [identity]], models: [asset.prefab: asset.modelURL.lastPathComponent])
-        return HomelandScenePackage(scene: scene, modelFiles: [asset.prefab: asset.modelURL])
+        return HomelandScenePackage(scene: scene, modelFiles: [asset.prefab: asset.modelURL], isAssetPreview: true)
     }
 
     private func detailGroup(_ title: String, rows: [(String, String)]) -> some View {

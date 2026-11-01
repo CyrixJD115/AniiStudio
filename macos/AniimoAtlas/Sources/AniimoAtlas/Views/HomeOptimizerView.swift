@@ -34,8 +34,8 @@ private struct PlannerAssignment: Identifiable {
     let facility: HomeFacility
     let recipe: HomeRecipe
     let count: Int
-    let rate: Double
-    let live: Bool
+    let rate: Double?
+    let clientWorkRate: Bool
     var id: String { facility.id }
 }
 
@@ -59,40 +59,33 @@ struct HomeOptimizerView: View {
     @State private var personalityBonus = false
     @State private var freeAniimo = 0
     @State private var harvestMoon = false
+    @State private var assumeClientUnlocks = false
     @State private var resultTab: PlannerResultTab = .production
 
-    private var live: [String: AniimoGuideRecipe] { guide.snapshot?.byID ?? [:] }
     private var workerLevel: Int { workerMode == .fast ? 3 : 0 }
     private var activeFacilities: [HomeFacility] { catalog.facilities.filter { facilityCount($0) > 0 } }
     private var assignments: [PlannerAssignment] {
         activeFacilities.compactMap { facility in
             let candidates = catalog.items.filter { recipe in
-                let current = live[recipe.id]
-                let unlock = current?.rv ?? recipe.unlock
-                return recipe.facility == facility.name && !recipe.isByproduct && unlock <= profile.rv &&
-                    (harvestMoon || !recipe.event) && (climateCrops || recipe.environment.isEmpty) &&
+                let unlock = recipe.unlock
+                return recipe.facility == facility.name && !recipe.isByproduct && unlock <= profile.rv && facility.level(at: profile.rv) >= recipe.facilityLevel &&
+                    (harvestMoon || !recipe.event) && (!recipe.isClientIndexed || assumeClientUnlocks) && (climateCrops || recipe.environment.isEmpty) &&
                     (!useOwnedWorkers || hasOwnedWorker(for: recipe))
             }
             guard let recipe = bestRecipe(in: candidates, facility: facility) else { return nil }
-            let published = live[recipe.id]?.coinsPerHour
-            let estimate = catalog.marginPerHour(recipe, worker: workerLevel, watered: waterPlots, personality: personalityBonus)
-            let baseRate = published ?? estimate ?? 0
-            let waterFactor = recipe.isCrop && !waterPlots ? 0.75 : 1.0
-            let personalityFactor = personalityBonus && !recipe.isCrop ? 1.2 : 1.0
-            let crackleFactor = cracklePower && profile.rv >= 12 && !recipe.isCrop ? 1.2 : 1.0
-            return PlannerAssignment(facility: facility, recipe: recipe, count: facilityCount(facility), rate: baseRate * waterFactor * personalityFactor * crackleFactor, live: published != nil)
+            return PlannerAssignment(facility: facility, recipe: recipe, count: facilityCount(facility), rate: localRate(recipe), clientWorkRate: InstalledWorkRateData.current.guideBindings[recipe.id] != nil)
         }.sorted { $0.facility.category == $1.facility.category ? $0.facility.name < $1.facility.name : $0.facility.category < $1.facility.category }
     }
     private var groupedAssignments: [String: [PlannerAssignment]] { Dictionary(grouping: assignments) { $0.facility.category } }
-    private var totalRate: Double { assignments.reduce(0) { $0 + $1.rate * Double($1.count) } }
+    private var totalRate: Double { assignments.reduce(0) { $0 + ($1.rate ?? 0) * Double($1.count) } }
     private var workingAniimo: Int {
         let required = assignments.reduce(0) { $0 + max(1, $1.recipe.steps.count) * $1.count }
         let cap = catalog.aniimo[min(max(profile.rv - 1, 0), catalog.aniimo.count - 1)]
         return min(max(0, cap - freeAniimo), required)
     }
-    private var nextUpgrade: HomeUpgrade { catalog.upgrade(from: profile.rv, through: min(20, profile.rv + 1)) }
+    private var nextUpgrade: HomeUpgrade { catalog.upgrade(from: profile.rv, through: min(catalog.maxRVLevel, profile.rv + 1)) }
     private var payback: String {
-        guard profile.rv < 20, totalRate > 0 else { return profile.rv == 20 ? "Max RV" : "—" }
+        guard profile.rv < catalog.maxRVLevel, totalRate > 0 else { return profile.rv == catalog.maxRVLevel ? "Max RV" : "—" }
         return homeDuration(nextUpgrade.coins / totalRate * 3600)
     }
 
@@ -106,7 +99,6 @@ struct HomeOptimizerView: View {
                 assumptions
             }.padding(28).frame(maxWidth: 1120, alignment: .leading)
         }
-        .task { if guide.snapshot == nil { await guide.refresh() } }
         .onAppear { seedOwnedCounts() }
         .onChange(of: profile.rv) { _, _ in seedOwnedCounts() }
     }
@@ -115,7 +107,7 @@ struct HomeOptimizerView: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Homeland Optimizer").font(.largeTitle.bold())
-                Text("Build a complete RV plan: goals, workers, facilities, recipe focus and placement.").foregroundStyle(.secondary)
+                Text("Plan with current client facility limits, module RV levels and worker forms. Local estimates use reviewed work rates; crop bonuses remain guide assumptions.").foregroundStyle(.secondary)
             }
             Spacer()
             sourceBadge
@@ -125,7 +117,7 @@ struct HomeOptimizerView: View {
     private var settings: some View {
         VStack(spacing: 14) {
             plannerSection(1, "Start here", subtitle: "Set your RV level. The whole plan below follows from it.") {
-                HStack { Text("My RV").font(.headline); Spacer(); Stepper(value: $profile.rv, in: 1...20) { Text("Level \(profile.rv)").font(.title3.bold().monospacedDigit()) } }
+                HStack { Text("My RV").font(.headline); Spacer(); Stepper(value: $profile.rv, in: 1...catalog.maxRVLevel) { Text("Level \(profile.rv)").font(.title3.bold().monospacedDigit()) } }
             }
             plannerSection(2, "What I want", subtitle: goal.detail) {
                 choiceGrid(PlannerGoal.allCases, selection: $goal) { option in PlannerChoiceCard(title: option.rawValue, detail: option.detail, icon: option.icon, selected: goal == option) }
@@ -135,6 +127,7 @@ struct HomeOptimizerView: View {
                 Toggle(isOn: $useOwnedWorkers) {
                     Label("Use Aniimo from my collection", systemImage: "checkmark.seal")
                 }.toggleStyle(.switch)
+                Text("Matches marked forms and each job’s required level. Collection marks do not prove current ownership or enough distinct workers for simultaneous assignments.").font(.caption).foregroundStyle(.secondary)
             }
             plannerSection(4, "Facilities", subtitle: "Plan with everything your RV allows, or enter what you have built.") {
                 choiceGrid(PlannerFacilityMode.allCases, selection: $facilityMode) { option in PlannerChoiceCard(title: option.rawValue, detail: option.detail, icon: option == .everything ? "square.grid.3x3.fill" : "house.fill", selected: facilityMode == option) }
@@ -153,7 +146,9 @@ struct HomeOptimizerView: View {
                 }
                 Stepper("Keep \(freeAniimo) Aniimo free", value: $freeAniimo, in: 0...max(0, catalog.aniimo[min(profile.rv - 1, catalog.aniimo.count - 1)]))
                     .help("Reserved for the Homebuilding Zone; they still count toward your RV limit.")
-                Toggle("Harvest Moon event recipes", isOn: $harvestMoon).disabled(profile.rv < 10)
+                Toggle("Include recipes with period constraints", isOn: $harvestMoon)
+                Toggle("Include indexed recipes (assume unlocks)", isOn: $assumeClientUnlocks)
+                Text("Indexed recipes use configured minimum RV/facility levels. Recipe Notes, modules, environmental setup and current availability must still be checked in-game.").font(.caption).foregroundStyle(.secondary)
             }
         }
     }
@@ -168,7 +163,7 @@ struct HomeOptimizerView: View {
             HStack(spacing: 12) {
                 metric("Home Coins / hour", homeNumber(totalRate), "dollarsign.circle.fill", .mint)
                 metric("Aniimo working", "\(workingAniimo)", "pawprint.fill", .purple)
-                metric(profile.rv < 20 ? "Next: RV \(profile.rv + 1)" : "RV status", payback, "clock.fill", .orange)
+                metric(profile.rv < catalog.maxRVLevel ? "Next: RV \(profile.rv + 1)" : "RV status", payback, "clock.fill", .orange)
             }
         }.padding(18).atlasGlass(cornerRadius: 20)
     }
@@ -185,7 +180,7 @@ struct HomeOptimizerView: View {
                                 VStack(alignment: .leading, spacing: 3) { Text(assignment.facility.name).font(.headline); Text(assignment.recipe.name).foregroundStyle(.secondary) }
                                 Spacer()
                                 Text("×\(assignment.count)").font(.headline.monospacedDigit())
-                                VStack(alignment: .trailing, spacing: 2) { Text("\(homeNumber(assignment.rate * Double(assignment.count))) / h").font(.headline.monospacedDigit()); Text(assignment.live ? "ANIIMO GUIDE" : "LOCAL ESTIMATE").font(.caption2.bold()).foregroundStyle(assignment.live ? .mint : .secondary) }.frame(width: 150, alignment: .trailing)
+                                VStack(alignment: .trailing, spacing: 2) { Text(assignment.rate.map { "\(homeNumber($0 * Double(assignment.count))) / h" } ?? "Rate unavailable").font(.headline.monospacedDigit()); Text(assignment.rate == nil ? "NO COIN QUOTE" : assignment.clientWorkRate ? "CLIENT WORK-RATE ESTIMATE" : "TIMER / GUIDE ESTIMATE").font(.caption2.bold()).foregroundStyle(assignment.clientWorkRate ? .mint : .secondary) }.frame(width: 150, alignment: .trailing)
                                 Image(systemName: "chevron.right").foregroundStyle(.tertiary)
                             }.padding(15).contentShape(Rectangle())
                         }.buttonStyle(.plain).atlasGlass(cornerRadius: 15)
@@ -212,7 +207,7 @@ struct HomeOptimizerView: View {
     private var assumptions: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Planner notes").font(.headline)
-            Text("Published Aniimo Guide rates are used where the live recipe index provides them. The native plan assigns the best available recipe to each enabled facility. Food, hauling distance, storage throughput, exact worker ownership and collision-free placement still need validation in-game.")
+            Text("Ranking and displayed rates use the same local model. Totals include only priced Home Coin recipes; missing quotes are shown as unavailable. Workload recipes use reviewed client arithmetic; watering and power bonuses are planning assumptions. Food shortages, hauling, storage, worker allocation and actual unlocks can lower throughput. Published guide rates remain available through the comparison link.")
             Link("Compare with the current Aniimo Guide planner", destination: URL(string: "https://aniimoguide.com/homeland")!)
         }.font(.caption).foregroundStyle(.secondary).padding(.top, 4)
     }
@@ -220,7 +215,7 @@ struct HomeOptimizerView: View {
     private func plannerSection<Content: View>(_ number: Int, _ title: String, subtitle: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top, spacing: 12) {
-                Text("\(number)").font(.headline.bold()).foregroundStyle(.white).frame(width: 30, height: 30).background(LinearGradient(colors: [.indigo, .purple], startPoint: .topLeading, endPoint: .bottomTrailing), in: Circle())
+                Text("\(number)").font(.headline.bold()).foregroundStyle(.white).frame(width: 30, height: 30).background(LinearGradient(colors: [Color(red: 0.08, green: 0.39, blue: 0.37), StudioPalette.ocean], startPoint: .topLeading, endPoint: .bottomTrailing), in: Circle())
                 VStack(alignment: .leading, spacing: 2) { Text(title).font(.title3.bold()); Text(subtitle).font(.callout).foregroundStyle(.secondary) }
             }
             content()
@@ -258,11 +253,19 @@ struct HomeOptimizerView: View {
         return pool.max { score($0) < score($1) }
     }
 
-    private func score(_ recipe: HomeRecipe) -> Double { live[recipe.id]?.coinsPerHour ?? catalog.marginPerHour(recipe, worker: workerLevel, watered: waterPlots, personality: personalityBonus) ?? 0 }
+    private func localRate(_ recipe: HomeRecipe) -> Double? { HomePlannerRate.estimate(catalog: catalog, recipe: recipe, worker: workerLevel, watered: waterPlots, personality: personalityBonus, assumePowerBonus: cracklePower && profile.rv >= 12) }
+    private func score(_ recipe: HomeRecipe) -> Double { localRate(recipe) ?? -Double.infinity }
     private func hasOwnedWorker(for recipe: HomeRecipe) -> Bool {
-        guard let ability = recipe.ability, let suggestions = catalog.workerSuggestions[ability] else { return true }
-        return suggestions.contains { name in
-            Creature.all.contains { $0.name == name && collection.count(for: $0) > 0 }
+        let installed = InstalledWorkerData.current
+        var requirements = recipe.steps.map { ($0.ability, $0.level) }
+        if let ability = recipe.ability { requirements.append((ability, recipe.minAbility)) }
+        return requirements.allSatisfy { ability, minimum in
+            guard let job = installed.jobs.first(where: { $0.facilityKey == ability }) else { return false }
+            return installed.workers(for: job.id).contains { worker in
+                guard worker.abilities[job.id, default: 0] >= max(minimum, workerLevel),
+                      let form = Creature.all.first(where: { $0.id == worker.speciesID })?.forms.first(where: { $0.id == worker.formID }) else { return false }
+                return form.appearances.contains { collection.contains(form: form.id, appearance: $0.id) }
+            }
         }
     }
     private func facilityCount(_ facility: HomeFacility) -> Int { facilityMode == .everything ? facility.count(at: profile.rv) : ownedCounts[facility.id, default: 0] }
@@ -276,10 +279,9 @@ struct HomeOptimizerView: View {
     }
 
     @ViewBuilder private var sourceBadge: some View {
-        switch guide.state {
-        case .idle, .loading: Label("Syncing Aniimo Guide", systemImage: "arrow.triangle.2.circlepath").foregroundStyle(.secondary)
-        case .ready(let snapshot): VStack(alignment: .trailing, spacing: 3) { Label("\(snapshot.recipes.count) live recipes", systemImage: "checkmark.seal.fill").foregroundStyle(.mint); Text("Updated \(snapshot.updated)").font(.caption).foregroundStyle(.secondary) }
-        case .failed: Label("Offline catalog", systemImage: "wifi.slash").foregroundStyle(.orange)
+        VStack(alignment: .trailing, spacing: 3) {
+            Label("Local estimates", systemImage: "function").foregroundStyle(.mint)
+            Text("Client work rates · guide crop bonuses").font(.caption).foregroundStyle(.secondary)
         }
     }
 }
@@ -291,11 +293,11 @@ private struct PlannerChoiceCard: View {
     let selected: Bool
     var body: some View {
         HStack(alignment: .top, spacing: 11) {
-            Image(systemName: icon).foregroundStyle(selected ? .white : .indigo).frame(width: 26)
-            VStack(alignment: .leading, spacing: 4) { Text(title).fontWeight(.semibold); Text(detail).font(.caption).foregroundStyle(selected ? .white.opacity(0.78) : .secondary) }
+            Image(systemName: icon).foregroundStyle(StudioPalette.teal).frame(width: 26)
+            VStack(alignment: .leading, spacing: 4) { Text(title).fontWeight(.semibold); Text(detail).font(.caption).foregroundStyle(Color.secondary) }
             Spacer(minLength: 0)
         }.padding(13).frame(maxWidth: .infinity, minHeight: 70, alignment: .leading)
-            .background(selected ? AnyShapeStyle(LinearGradient(colors: [.indigo, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)) : AnyShapeStyle(Color.white.opacity(0.035)), in: RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(selected ? .white.opacity(0.2) : .white.opacity(0.06)))
+            .background(selected ? StudioPalette.teal.opacity(0.12) : Color.primary.opacity(0.035), in: RoundedRectangle(cornerRadius: 17))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(selected ? StudioPalette.teal.opacity(0.2) : Color.primary.opacity(0.06)))
     }
 }

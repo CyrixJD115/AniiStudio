@@ -11,6 +11,9 @@ struct HomeRecipe: Decodable, Identifiable {
     let event: Bool
     let byproductOnly: Bool?
     let energy: Double
+    var clientConditions: [String]? = nil
+    var isClientIndexed: Bool { id.hasPrefix("client-") || id.hasPrefix("item-") }
+    var isExternalInput: Bool { id.hasPrefix("item-") }
 
     var isByproduct: Bool { byproductOnly == true }
     var isCrop: Bool { seconds > 0 }
@@ -25,22 +28,16 @@ struct HomeRecipe: Decodable, Identifiable {
         guard byproduct > 0 else { return nil }
         return facility == "Mine" ? "mineral_sand" : facility == "Woodland" ? "wood_block" : nil
     }
-    // Mirrors the MIT-licensed Aniiland 2305638 timing model. These are ideal
-    // single-facility rates, not a supply-balanced whole-home solution.
+    // Current reviewed client work-rate formulas for workload recipes. Fixed crop
+    // timers retain guide watering assumptions; all rates exclude live downtime.
     func cycleSeconds(workerLevel: Int = 0, watered: Bool = false, personality: Bool = false) -> Double? {
         guard !isByproduct else { return nil }
         if seconds > 0 { return seconds * (watered ? 0.75 : 1) }
         guard workload > 0 else { return nil }
         let worker = workerLevel == 0 ? minAbility : workerLevel
         guard worker >= minAbility else { return nil }
-        let above = Double(max(0, worker - minAbility))
-        let base = 1 + 0.25 * Double(max(1, minAbility) - 1)
-        if ["Dance Pad Polisher", "Aniipod Maker"].contains(facility) {
-            return workload / ((1 + 0.4 * Double(max(0, min(4, worker) - minAbility))) * base)
-        }
-        let gathering = ingredients.isEmpty
-        let speed = gathering ? 1 + above * (minAbility == 1 ? 0.5 : 0.4) : above == 0 ? 1 : 2 + above
-        return workload / (speed * (personality ? 1.2 : 1) * (gathering ? base : 1))
+        guard let rate = InstalledWorkRateData.current.unitsPerMinute(recipeID: id, workerLevel: worker, personality: personality) else { return nil }
+        return workload * 60 / rate
     }
 }
 struct HomeJobStep: Decodable { let ability: String; let level: Int; let workload: Double }
@@ -73,6 +70,8 @@ struct HomelandCatalog: Decodable {
         }
         return try JSONDecoder().decode(Self.self, from: Data(contentsOf: url))
     }
+    var maxRVLevel: Int { levelUpCosts.keys.compactMap(Int.init).max() ?? 1 }
+    static var maximumRVLevel: Int { (try? loadResult.get())?.maxRVLevel ?? 20 }
     func recipe(_ id: String) -> HomeRecipe? { items.first { $0.id == id } }
     func name(_ id: String) -> String { recipe(id)?.name ?? id.replacingOccurrences(of: "_", with: " ").capitalized }
     func producers(of id: String) -> [HomeRecipe] {
@@ -94,10 +93,10 @@ struct HomelandCatalog: Decodable {
         return (item.price * item.yield - cost - inputs) * 3600 / duration
     }
     func upgrade(from current: Int, through target: Int) -> HomeUpgrade {
-        guard target > current, current < 20 else { return HomeUpgrade(coins: 0, items: [:]) }
+        guard target > current, current < maxRVLevel else { return HomeUpgrade(coins: 0, items: [:]) }
         var coins = 0.0
         var ingredients: [String: Double] = [:]
-        for level in (current + 1)...min(target, 20) {
+        for level in (current + 1)...min(target, maxRVLevel) {
             guard let step = levelUpCosts[String(level)] else { continue }
             coins += step.coins
             for (id, quantity) in step.items { ingredients[id, default: 0] += quantity }

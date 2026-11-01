@@ -9,7 +9,7 @@ import Combine
     private let defaults: UserDefaults
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        rv = max(1, min(20, defaults.object(forKey: "home.production.rv") as? Int ?? 9))
+        rv = max(1, min(HomelandCatalog.maximumRVLevel, defaults.object(forKey: "home.production.rv") as? Int ?? 9))
         stock = Self.read(defaults, "home.production.stock")
         targets = Self.read(defaults, "home.production.targets")
         pinned = Set(defaults.stringArray(forKey: "home.production.pinned") ?? [])

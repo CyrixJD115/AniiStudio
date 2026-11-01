@@ -4,6 +4,7 @@ struct HomelandCachedAsset {
     let prefab: String
     let modelURL: URL
     let sourceLayout: String
+    var renderNote: String? = nil
 }
 
 /// Reuses only real GLB files already fetched with clean Aniidex manifests.
@@ -24,7 +25,31 @@ struct HomelandAssetLibraryService {
         // cache. Preserve already acquired legacy assets without redownloading.
         _ = try? migrateLegacy(from: Self.legacyRoot, to: Self.durableRoot)
         return read(root: Self.durableRoot).merging(read(root: Self.legacyRoot)) { durable, _ in durable }
+            .merging(Self.bundledPatchAssets) { _, installed in installed }
     }
+
+    private struct PatchModels: Decodable {
+        struct Record: Decodable { let file: String; let limitations: String }
+        let build: String
+        let models: [String: Record]
+    }
+    private static let bundledPatchAssets: [String: HomelandCachedAsset] = {
+        guard let indexURL = Bundle.module.url(forResource: "patch-models", withExtension: "json"),
+              let data = try? Data(contentsOf: indexURL), let index = try? JSONDecoder().decode(PatchModels.self, from: data) else { return [:] }
+        var result: [String: HomelandCachedAsset] = [:]
+        for (prefab, record) in index.models {
+            guard record.file == prefab + ".glb", !prefab.contains("/"), !prefab.contains(".."),
+                  let url = Bundle.module.url(forResource: prefab, withExtension: "glb"),
+                  let handle = try? FileHandle(forReadingFrom: url) else { continue }
+            let header = try? handle.read(upToCount: 12); try? handle.close()
+            guard let header, header.count == 12, Array(header.prefix(8)) == [0x67,0x6c,0x54,0x46,2,0,0,0],
+                  let size = try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize else { continue }
+            let declared = (8..<12).reduce(UInt32(0)) { $0 | UInt32(header[$1]) << UInt32(($1-8)*8) }
+            guard declared == size else { continue }
+            result[prefab] = HomelandCachedAsset(prefab: prefab, modelURL: url, sourceLayout: "installed patch \(index.build)", renderNote: record.limitations)
+        }
+        return result
+    }()
 
     func migrateLegacy(from source: URL, to destination: URL) throws {
         let fm = FileManager.default

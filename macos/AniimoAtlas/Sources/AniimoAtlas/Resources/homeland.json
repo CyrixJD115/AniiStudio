@@ -147,7 +147,7 @@
       "event": false,
       "product": "rice",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 360,
       "unlock": 5
     },
     {
@@ -427,7 +427,7 @@
       "event": false,
       "product": "sugarcane",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 1800,
       "unlock": 9
     },
     {
@@ -627,7 +627,7 @@
       "event": false,
       "product": "cranberry",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 1450,
       "unlock": 16
     },
     {
@@ -782,7 +782,7 @@
       "event": false,
       "product": "bread",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 26740,
       "unlock": 4
     },
     {
@@ -809,7 +809,7 @@
       "event": false,
       "product": "premium_bread",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 26740,
       "unlock": 4
     },
     {
@@ -891,7 +891,7 @@
       "event": false,
       "product": "apple_tart",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 30800,
       "unlock": 7
     },
     {
@@ -945,7 +945,7 @@
       "event": false,
       "product": "lavender_cookies",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 30240,
       "unlock": 9
     },
     {
@@ -999,7 +999,7 @@
       "event": false,
       "product": "grape_candy",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 45570,
       "unlock": 12
     },
     {
@@ -1053,7 +1053,7 @@
       "event": false,
       "product": "maple_candy_star",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 28460,
       "unlock": 16
     },
     {
@@ -1135,7 +1135,7 @@
       "event": false,
       "product": "berry_chocolate_coconut_pudding",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 126360,
       "unlock": 19
     },
     {
@@ -1163,7 +1163,7 @@
       "event": false,
       "product": "premium_berry_chocolate_coconut_pudding",
       "source": "aniimax release data",
-      "energy": 37910,
+      "energy": 142560,
       "unlock": 19
     },
     {
@@ -2280,7 +2280,7 @@
         "sintered_ore_brick": 8.0
       },
       "ability": "Fire",
-      "minAbility": 2,
+      "minAbility": 3,
       "steps": [],
       "event": false,
       "product": "refined_ore",
@@ -2306,7 +2306,7 @@
         "refined_ore": 4.0
       },
       "ability": "Fire",
-      "minAbility": 2,
+      "minAbility": 3,
       "steps": [],
       "event": false,
       "product": "microcrystalline_ore_plate",
@@ -2492,7 +2492,7 @@
         "rose_incense": 1.0,
         "bamboo": 13.0
       },
-      "ability": "Perfumery",
+      "ability": "Artisanship",
       "minAbility": 2,
       "steps": [],
       "event": false,
@@ -3159,7 +3159,7 @@
       "event": false,
       "product": "ginseng_powder",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 12730,
       "unlock": 13
     },
     {
@@ -3211,7 +3211,7 @@
       "event": false,
       "product": "coconut_oil",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 10980,
       "unlock": 16
     },
     {
@@ -4384,7 +4384,7 @@
     },
     {
       "id": "chestnut_puree",
-      "name": "Chestnut Pur\u00e9e",
+      "name": "Chestnut Purée",
       "facility": "Simmering Pot",
       "price": 980.0,
       "currency": "coins",
@@ -4782,7 +4782,7 @@
       "event": false,
       "product": "premium_potato_soup",
       "source": "aniimax release data",
-      "energy": 7040,
+      "energy": 23470,
       "unlock": 8
     },
     {
@@ -4809,7 +4809,7 @@
       "event": false,
       "product": "tanghulu",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 45280,
       "unlock": 10
     },
     {
@@ -4863,7 +4863,7 @@
       "event": false,
       "product": "sugar_roasted_chestnuts",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 45280,
       "unlock": 10
     },
     {
@@ -4943,7 +4943,7 @@
       "event": false,
       "product": "walnut_cake",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 50910,
       "unlock": 13
     },
     {
@@ -4971,7 +4971,7 @@
       "event": false,
       "product": "jello",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 42690,
       "unlock": 16
     },
     {
@@ -4998,7 +4998,7 @@
       "event": false,
       "product": "strawberry_candy",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 65050,
       "unlock": 16
     },
     {
@@ -5053,7 +5053,7 @@
       "event": false,
       "product": "premium_jello",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 47440,
       "unlock": 16
     },
     {
@@ -5558,7 +5558,7 @@
         "standard_planks": 8.0
       },
       "ability": "Artisanship",
-      "minAbility": 2,
+      "minAbility": 3,
       "steps": [],
       "event": false,
       "product": "laminated_beams",
@@ -5584,7 +5584,7 @@
         "laminated_beams": 4.0
       },
       "ability": "Artisanship",
-      "minAbility": 2,
+      "minAbility": 3,
       "steps": [],
       "event": false,
       "product": "densified_timber_component",
@@ -5641,7 +5641,7 @@
       "event": false,
       "product": "dried_lemon_slices",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 6560,
       "unlock": 5
     },
     {
@@ -5745,7 +5745,7 @@
       "event": false,
       "product": "dried_strawberries",
       "source": "aniimax release data",
-      "energy": 0,
+      "energy": 9060,
       "unlock": 10
     },
     {
@@ -6078,7 +6078,7 @@
         "rock_candy": 1
       },
       "ability": "Fire",
-      "minAbility": 3,
+      "minAbility": 2,
       "steps": [],
       "event": true,
       "product": "moondew_radish_slices",
@@ -6133,7 +6133,7 @@
         "fresh_water": 8
       },
       "ability": "Fire",
-      "minAbility": 3,
+      "minAbility": 2,
       "steps": [],
       "event": true,
       "product": "umbral_hot_pot",
@@ -6161,7 +6161,7 @@
         "cider_vinegar": 1
       },
       "ability": "Dark",
-      "minAbility": 3,
+      "minAbility": 2,
       "steps": [],
       "event": true,
       "product": "umbral_pickle",
@@ -6247,6 +6247,1676 @@
       "byproductOnly": true,
       "energy": 0,
       "unlock": 3
+    },
+    {
+      "id": "client-4001008",
+      "name": "Sorghum",
+      "facility": "Farmland",
+      "price": 248,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 1800,
+      "workload": 0,
+      "yield": 10,
+      "byproduct": 0,
+      "facilityLevel": 8,
+      "module": "",
+      "environment": "Specific light conditions",
+      "ingredients": {
+        "item-4000008": 1
+      },
+      "ability": null,
+      "minAbility": 1,
+      "steps": [
+        {
+          "ability": "Earth",
+          "level": 1,
+          "workload": 5
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        },
+        {
+          "ability": "Dark",
+          "level": 1,
+          "workload": 3
+        }
+      ],
+      "event": false,
+      "product": "client-4001008",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4001068",
+      "name": "Captain Spud",
+      "facility": "Farmland",
+      "price": 3,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 800,
+      "workload": 0,
+      "yield": 5,
+      "byproduct": 0,
+      "facilityLevel": 1,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "item-4000045": 1
+      },
+      "ability": null,
+      "minAbility": 1,
+      "steps": [
+        {
+          "ability": "Earth",
+          "level": 1,
+          "workload": 5
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        },
+        {
+          "ability": "Dark",
+          "level": 1,
+          "workload": 3
+        }
+      ],
+      "event": true,
+      "product": "client-4001068",
+      "source": "Installed client 3846247",
+      "energy": 600,
+      "unlock": 1,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Recipe Note: Sweet Potato",
+        "Configured period: Collab Recipe; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4001074",
+      "name": "Magic Pumpkin",
+      "facility": "Farmland",
+      "price": 61,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 1800,
+      "workload": 0,
+      "yield": 8,
+      "byproduct": 0,
+      "facilityLevel": 5,
+      "module": "",
+      "environment": "Specific light conditions",
+      "ingredients": {
+        "item-4000046": 1
+      },
+      "ability": null,
+      "minAbility": 1,
+      "steps": [
+        {
+          "ability": "Earth",
+          "level": 1,
+          "workload": 5
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        }
+      ],
+      "event": true,
+      "product": "client-4001074",
+      "source": "Installed client 3846247",
+      "energy": 1350,
+      "unlock": 9,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Magic Pumpkin",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4001075",
+      "name": "Memory Lanternfruit",
+      "facility": "Farmland",
+      "price": 61,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 1800,
+      "workload": 0,
+      "yield": 8,
+      "byproduct": 0,
+      "facilityLevel": 5,
+      "module": "",
+      "environment": "Specific light conditions",
+      "ingredients": {
+        "item-4000047": 1
+      },
+      "ability": null,
+      "minAbility": 1,
+      "steps": [
+        {
+          "ability": "Earth",
+          "level": 1,
+          "workload": 5
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        }
+      ],
+      "event": true,
+      "product": "client-4001075",
+      "source": "Installed client 3846247",
+      "energy": 1350,
+      "unlock": 9,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Memoryglow Fruit",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4001076",
+      "name": "Silver Ore",
+      "facility": "Mine",
+      "price": 1155,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 2700,
+      "yield": 2,
+      "byproduct": 165,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": "Earth",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4001076",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4001077",
+      "name": "Snowmelt Cold Spring",
+      "facility": "Well",
+      "price": 385,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 2700,
+      "yield": 6,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": "Water",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4001077",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4001078",
+      "name": "Gold-Speck Cap",
+      "facility": "Starfall Hammock",
+      "price": 289,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 2700,
+      "yield": 8,
+      "byproduct": 0,
+      "facilityLevel": 2,
+      "module": "",
+      "environment": "Specific light conditions",
+      "ingredients": {},
+      "ability": "Leisure",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4001078",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4001079",
+      "name": "Sweet Cone",
+      "facility": "Tidewhisper Sandcastle",
+      "price": 1266,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 2700,
+      "yield": 2,
+      "byproduct": 0,
+      "facilityLevel": 5,
+      "module": "",
+      "environment": "Specific light conditions",
+      "ingredients": {},
+      "ability": "Leisure",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4001079",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010198",
+      "name": "Pearl Powder",
+      "facility": "Carousel Mill",
+      "price": 1810,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 81,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "pearl": 2
+      },
+      "ability": "Wind",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010198",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 18,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010199",
+      "name": "Sorghum Flour",
+      "facility": "Carousel Mill",
+      "price": 3310,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 81,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001008": 10
+      },
+      "ability": "Wind",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010199",
+      "source": "Installed client 3846247",
+      "energy": 14900,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010200",
+      "name": "Gold Dust",
+      "facility": "Carousel Mill",
+      "price": 3140,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 81,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001078": 8
+      },
+      "ability": "Wind",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010200",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010201",
+      "name": "Bright Silver Powder",
+      "facility": "Carousel Mill",
+      "price": 3140,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 81,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001076": 2
+      },
+      "ability": "Wind",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010201",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010202",
+      "name": "Dried Orange Flower",
+      "facility": "Jukebox Dryer",
+      "price": 2660,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 81,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 8,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "orange_flower": 8
+      },
+      "ability": "Dark",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010202",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010203",
+      "name": "Agave Fiber",
+      "facility": "Jukebox Dryer",
+      "price": 2280,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 81,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 8,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "agave": 6
+      },
+      "ability": "Dark",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010203",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010204",
+      "name": "Coconut Milk Lotion",
+      "facility": "Phonolfactory Table",
+      "price": 7030,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "coconut_milk": 1,
+        "aromathyst": 8
+      },
+      "ability": "Perfumery",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010204",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010205",
+      "name": "Orange Flower Skin Balm",
+      "facility": "Phonolfactory Table",
+      "price": 8130,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010202": 1,
+        "aromathyst": 8,
+        "client-4001077": 6
+      },
+      "ability": "Perfumery",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010205",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010206",
+      "name": "Gold Dust Sachet",
+      "facility": "Phonolfactory Table",
+      "price": 6920,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "dried_flowers": 1,
+        "client-4010200": 1
+      },
+      "ability": "Perfumery",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010206",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010207",
+      "name": "Potato Starch",
+      "facility": "Simmering Pot",
+      "price": 6280,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4020080": 6,
+        "client-4001077": 6
+      },
+      "ability": "Fire",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010207",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010208",
+      "name": "Sorghum Porridge",
+      "facility": "Simmering Pot",
+      "price": 6440,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001008": 10,
+        "client-4001077": 6
+      },
+      "ability": "Fire",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010208",
+      "source": "Installed client 3846247",
+      "energy": 29810,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010209",
+      "name": "Orange Flower Syrup",
+      "facility": "Simmering Pot",
+      "price": 7400,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 7,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "orange_flower": 8,
+        "agave_syrup": 1
+      },
+      "ability": "Fire",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010209",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010210",
+      "name": "Shredded Coconut Cake",
+      "facility": "Blazing Stove",
+      "price": 10480,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010207": 1,
+        "shredded_coconut": 1
+      },
+      "ability": "Fire",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010210",
+      "source": "Installed client 3846247",
+      "energy": 52060,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010211",
+      "name": "Cranberry Soft Cake",
+      "facility": "Blazing Stove",
+      "price": 11060,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010207": 1,
+        "dried_cranberries": 1
+      },
+      "ability": "Fire",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010211",
+      "source": "Installed client 3846247",
+      "energy": 52060,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010212",
+      "name": "Orange Flower Rice Drink",
+      "facility": "Blazing Stove",
+      "price": 13170,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010216": 1,
+        "client-4010202": 1
+      },
+      "ability": "Fire",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010212",
+      "source": "Installed client 3846247",
+      "energy": 52060,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Orange Flower Rice Drink"
+      ]
+    },
+    {
+      "id": "client-4010213",
+      "name": "Red Sorghum Rice Drink",
+      "facility": "Bouncy Brew Keg",
+      "price": 8250,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010216": 1
+      },
+      "ability": "Water",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010213",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010214",
+      "name": "Cocoa Sweet Cone",
+      "facility": "Bouncy Brew Keg",
+      "price": 15380,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 405,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001079": 2,
+        "cocoa_spread": 1
+      },
+      "ability": "Water",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010214",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010215",
+      "name": "Sugar Core Sweet Cone",
+      "facility": "Bouncy Brew Keg",
+      "price": 8340,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001079": 2,
+        "agave_syrup": 1
+      },
+      "ability": "Water",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010215",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010216",
+      "name": "Sorghum Fermented Mash",
+      "facility": "Pickling Jar",
+      "price": 6440,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001008": 10,
+        "client-4001077": 6
+      },
+      "ability": "Dark",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010216",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010217",
+      "name": "Star Diamond",
+      "facility": "Crafting Table",
+      "price": 3990,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 8,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "gem": 2,
+        "star": 2
+      },
+      "ability": "Artisanship",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010217",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 20,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010218",
+      "name": "Pearl Face Cream",
+      "facility": "Crafting Table",
+      "price": 11130,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 8,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010198": 1,
+        "lotion": 1
+      },
+      "ability": "Artisanship",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010218",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 20,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010219",
+      "name": "Quicksilver Springstone",
+      "facility": "Crafting Table",
+      "price": 6430,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 9,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001076": 2,
+        "client-4001077": 6
+      },
+      "ability": "Artisanship",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010219",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010220",
+      "name": "Glitter Powder",
+      "facility": "Crafting Table",
+      "price": 11560,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 9,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010200": 1,
+        "client-4010201": 1,
+        "scales": 12
+      },
+      "ability": "Artisanship",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010220",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010221",
+      "name": "Sisal Plush Mat",
+      "facility": "Joy Wheel Loom",
+      "price": 4680,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 5,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010203": 1,
+        "woolen_yarn": 1
+      },
+      "ability": "Wind",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010221",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010222",
+      "name": "Orange Flower Scented Mat",
+      "facility": "Crafting Table",
+      "price": 10050,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 9,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010202": 1,
+        "client-4010221": 1
+      },
+      "ability": "Artisanship",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4010222",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4010223",
+      "name": "Sea Salt Roasted Pumpkin",
+      "facility": "Claw Game Cooker",
+      "price": 1180,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 135,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 4,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001074": 8,
+        "sea_salt": 23
+      },
+      "ability": "Fire",
+      "minAbility": 2,
+      "steps": [],
+      "event": true,
+      "product": "client-4010223",
+      "source": "Installed client 3846247",
+      "energy": 25920,
+      "unlock": 9,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Salt-Roasted Pumpkin",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4010224",
+      "name": "Candied Lanternfruit",
+      "facility": "Pickling Jar",
+      "price": 2260,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 203,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 2,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001075": 8,
+        "rock_candy": 1
+      },
+      "ability": "Dark",
+      "minAbility": 2,
+      "steps": [],
+      "event": true,
+      "product": "client-4010224",
+      "source": "Installed client 3846247",
+      "energy": 86250,
+      "unlock": 10,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Candied Lanternfruit",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4010225",
+      "name": "Honey-Glazed Pumpkin Cup",
+      "facility": "Blazing Stove",
+      "price": 4430,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 338,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 2,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010223": 1,
+        "client-4010224": 1
+      },
+      "ability": "Fire",
+      "minAbility": 2,
+      "steps": [],
+      "event": true,
+      "product": "client-4010225",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 10,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Honey-Glazed Pumpkin Cup",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4010226",
+      "name": "Magic Pumpkin Lantern",
+      "facility": "Crafting Table",
+      "price": 650,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 68,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 4,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001074": 8
+      },
+      "ability": "Artisanship",
+      "minAbility": 2,
+      "steps": [],
+      "event": true,
+      "product": "client-4010226",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 9,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Magic Pumpkin Lantern",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4010227",
+      "name": "Memory Lantern",
+      "facility": "Crafting Table",
+      "price": 1220,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 135,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 4,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001075": 8,
+        "cotton_thread": 1
+      },
+      "ability": "Artisanship",
+      "minAbility": 2,
+      "steps": [],
+      "event": true,
+      "product": "client-4010227",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 9,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Memory Lantern",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4010228",
+      "name": "Glowfruit Lantern Set",
+      "facility": "Crafting Table",
+      "price": 2710,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 243,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 5,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4010227": 1,
+        "client-4010226": 1
+      },
+      "ability": "Artisanship",
+      "minAbility": 3,
+      "steps": [],
+      "event": true,
+      "product": "client-4010228",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 12,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Glowfruit Lantern Set",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4010229",
+      "name": "Magic Pumpkin Cake",
+      "facility": "Blazing Stove",
+      "price": 1120,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 135,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 2,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001074": 8,
+        "milled_rice": 1
+      },
+      "ability": "Fire",
+      "minAbility": 2,
+      "steps": [],
+      "event": true,
+      "product": "client-4010229",
+      "source": "Installed client 3846247",
+      "energy": 30190,
+      "unlock": 10,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Magic Pumpkin Cake",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4010230",
+      "name": "Gleam Fruit Nectar",
+      "facility": "Bouncy Brew Keg",
+      "price": 1180,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 135,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 2,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001075": 8,
+        "fresh_water": 8
+      },
+      "ability": "Water",
+      "minAbility": 2,
+      "steps": [],
+      "event": true,
+      "product": "client-4010230",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 9,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Gleam Fruit Nectar",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4010231",
+      "name": "Golden Lantern Pumpkin Soup",
+      "facility": "Simmering Pot",
+      "price": 1830,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 203,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 3,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001074": 8,
+        "client-4001075": 8,
+        "fresh_water": 8
+      },
+      "ability": "Fire",
+      "minAbility": 2,
+      "steps": [],
+      "event": true,
+      "product": "client-4010231",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 9,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game.",
+        "Configured unlock item: Formula Notes · Lantern Pumpkin Soup",
+        "Configured period: Season Formula; current availability not read."
+      ]
+    },
+    {
+      "id": "client-4020080",
+      "name": "Premium Potato",
+      "facility": "Farmland",
+      "price": 386,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 1800,
+      "workload": 0,
+      "yield": 6,
+      "byproduct": 0,
+      "facilityLevel": 8,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "item-4000002": 1
+      },
+      "ability": null,
+      "minAbility": 1,
+      "steps": [
+        {
+          "ability": "Earth",
+          "level": 1,
+          "workload": 5
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        },
+        {
+          "ability": "Dark",
+          "level": 1,
+          "workload": 3
+        }
+      ],
+      "event": false,
+      "product": "client-4020080",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4020081",
+      "name": "Quick Formula · Agave",
+      "facility": "Farmland",
+      "price": 240,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 1800,
+      "workload": 0,
+      "yield": 10,
+      "byproduct": 0,
+      "facilityLevel": 8,
+      "module": "",
+      "environment": "Specific light conditions",
+      "ingredients": {
+        "item-4000013": 1
+      },
+      "ability": null,
+      "minAbility": 1,
+      "steps": [
+        {
+          "ability": "Earth",
+          "level": 1,
+          "workload": 5
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        },
+        {
+          "ability": "Grass",
+          "level": 1,
+          "workload": 3
+        }
+      ],
+      "event": false,
+      "product": "agave",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4020082",
+      "name": "Quick Formula · Snowmelt Cold Spring",
+      "facility": "Well",
+      "price": 385,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 2700,
+      "yield": 9,
+      "byproduct": 0,
+      "facilityLevel": 6,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": "Water",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4001077",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 21,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4020083",
+      "name": "Premium Quicksilver Springstone",
+      "facility": "Crafting Table",
+      "price": 7330,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 162,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 9,
+      "module": "",
+      "environment": "",
+      "ingredients": {
+        "client-4001076": 2,
+        "client-4001077": 6
+      },
+      "ability": "Artisanship",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "client-4020083",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 22,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "client-4020084",
+      "name": "Quick Formula: Pearl",
+      "facility": "Tidewhisper Sandcastle",
+      "price": 450,
+      "currency": "coins",
+      "cost": 0,
+      "seconds": 0,
+      "workload": 2700,
+      "yield": 4,
+      "byproduct": 0,
+      "facilityLevel": 4,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": "Leisure",
+      "minAbility": 3,
+      "steps": [],
+      "event": false,
+      "product": "pearl",
+      "source": "Installed client 3846247",
+      "energy": 0,
+      "unlock": 19,
+      "clientConditions": [
+        "Minimum RV and facility level only; recipe/module unlocks and availability must be checked in-game."
+      ]
+    },
+    {
+      "id": "item-4000008",
+      "name": "Sorghum Seed",
+      "facility": "External input",
+      "price": 0,
+      "currency": "none",
+      "cost": null,
+      "seconds": 0,
+      "workload": 0,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 1,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": null,
+      "minAbility": 1,
+      "steps": [],
+      "event": false,
+      "product": "item-4000008",
+      "source": "Installed client 3846247; external input with unquoted acquisition cost",
+      "energy": 0,
+      "unlock": 1,
+      "byproductOnly": true,
+      "clientConditions": [
+        "Acquisition source and cost must be checked in-game; no standalone production recipe is assumed."
+      ]
+    },
+    {
+      "id": "item-4000045",
+      "name": "Sweet Potato Seeds",
+      "facility": "External input",
+      "price": 0,
+      "currency": "none",
+      "cost": null,
+      "seconds": 0,
+      "workload": 0,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 1,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": null,
+      "minAbility": 1,
+      "steps": [],
+      "event": false,
+      "product": "item-4000045",
+      "source": "Installed client 3846247; external input with unquoted acquisition cost",
+      "energy": 0,
+      "unlock": 1,
+      "byproductOnly": true,
+      "clientConditions": [
+        "Acquisition source and cost must be checked in-game; no standalone production recipe is assumed."
+      ]
+    },
+    {
+      "id": "item-4000046",
+      "name": "Magic Pumpkin Seed",
+      "facility": "External input",
+      "price": 0,
+      "currency": "none",
+      "cost": null,
+      "seconds": 0,
+      "workload": 0,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 1,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": null,
+      "minAbility": 1,
+      "steps": [],
+      "event": false,
+      "product": "item-4000046",
+      "source": "Installed client 3846247; external input with unquoted acquisition cost",
+      "energy": 0,
+      "unlock": 1,
+      "byproductOnly": true,
+      "clientConditions": [
+        "Acquisition source and cost must be checked in-game; no standalone production recipe is assumed."
+      ]
+    },
+    {
+      "id": "item-4000047",
+      "name": "Memory Lanternfruit Seeds",
+      "facility": "External input",
+      "price": 0,
+      "currency": "none",
+      "cost": null,
+      "seconds": 0,
+      "workload": 0,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 1,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": null,
+      "minAbility": 1,
+      "steps": [],
+      "event": false,
+      "product": "item-4000047",
+      "source": "Installed client 3846247; external input with unquoted acquisition cost",
+      "energy": 0,
+      "unlock": 1,
+      "byproductOnly": true,
+      "clientConditions": [
+        "Acquisition source and cost must be checked in-game; no standalone production recipe is assumed."
+      ]
+    },
+    {
+      "id": "item-4000002",
+      "name": "Potato Seed",
+      "facility": "External input",
+      "price": 0,
+      "currency": "none",
+      "cost": null,
+      "seconds": 0,
+      "workload": 0,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 1,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": null,
+      "minAbility": 1,
+      "steps": [],
+      "event": false,
+      "product": "item-4000002",
+      "source": "Installed client 3846247; external input with unquoted acquisition cost",
+      "energy": 0,
+      "unlock": 1,
+      "byproductOnly": true,
+      "clientConditions": [
+        "Acquisition source and cost must be checked in-game; no standalone production recipe is assumed."
+      ]
+    },
+    {
+      "id": "item-4000013",
+      "name": "Agave Seed",
+      "facility": "External input",
+      "price": 0,
+      "currency": "none",
+      "cost": null,
+      "seconds": 0,
+      "workload": 0,
+      "yield": 1,
+      "byproduct": 0,
+      "facilityLevel": 1,
+      "module": "",
+      "environment": "",
+      "ingredients": {},
+      "ability": null,
+      "minAbility": 1,
+      "steps": [],
+      "event": false,
+      "product": "item-4000013",
+      "source": "Installed client 3846247; external input with unquoted acquisition cost",
+      "energy": 0,
+      "unlock": 1,
+      "byproductOnly": true,
+      "clientConditions": [
+        "Acquisition source and cost must be checked in-game; no standalone production recipe is assumed."
+      ]
     }
   ],
   "facilities": [
@@ -6262,7 +7932,8 @@
         "4": 7,
         "5": 9,
         "6": 12,
-        "7": 16
+        "7": 16,
+        "8": 21
       },
       "counts": [
         4,
@@ -6284,6 +7955,8 @@
         36,
         38,
         40,
+        40,
+        40,
         42
       ]
     },
@@ -6301,7 +7974,7 @@
         "6": 18
       },
       "counts": [
-        0,
+        3,
         3,
         4,
         5,
@@ -6320,6 +7993,8 @@
         18,
         19,
         20,
+        20,
+        20,
         21
       ]
     },
@@ -6337,11 +8012,12 @@
         "3": 9,
         "4": 12,
         "5": 15,
-        "6": 18
+        "6": 18,
+        "7": 21
       },
       "counts": [
-        0,
-        0,
+        2,
+        2,
         2,
         2,
         3,
@@ -6359,6 +8035,8 @@
         9,
         9,
         10,
+        10,
+        10,
         10
       ]
     },
@@ -6375,17 +8053,32 @@
         "2": 8,
         "3": 11,
         "4": 13,
-        "5": 17
+        "5": 17,
+        "6": 21
       },
       "counts": [
-        0,
-        0,
-        0,
         1,
         1,
         1,
         1,
-        2
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4
       ]
     },
     {
@@ -6399,13 +8092,11 @@
       "unlocks": {
         "1": 5,
         "2": 8,
-        "3": 13
+        "3": 13,
+        "4": 19,
+        "5": 22
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6419,9 +8110,15 @@
         1,
         1,
         1,
-        1,
-        1,
-        1
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6437,11 +8134,6 @@
         "2": 11
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6456,7 +8148,14 @@
         1,
         1,
         1,
-        1
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6473,15 +8172,6 @@
         "3": 16
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6492,7 +8182,18 @@
         1,
         1,
         1,
-        1
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6505,20 +8206,10 @@
       "ability": "Leisure",
       "personality": "Faithful",
       "unlocks": {
-        "1": 12
+        "1": 12,
+        "2": 21
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6527,7 +8218,20 @@
         1,
         1,
         1,
-        1
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6543,23 +8247,25 @@
         "1": 18
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
         1,
         1,
         1
@@ -6575,13 +8281,28 @@
         "1": 7
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
       ]
     },
     {
@@ -6594,13 +8315,28 @@
         "1": 7
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
       ]
     },
     {
@@ -6613,15 +8349,28 @@
         "1": 9
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3
       ]
     },
     {
@@ -6638,10 +8387,10 @@
         "3": 9,
         "4": 13,
         "5": 16,
-        "6": 18
+        "6": 18,
+        "7": 21
       },
       "counts": [
-        0,
         1,
         1,
         1,
@@ -6649,6 +8398,20 @@
         1,
         1,
         1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
         2
       ]
     },
@@ -6668,11 +8431,10 @@
         "5": 12,
         "6": 15,
         "7": 18,
-        "8": 20
+        "8": 20,
+        "9": 22
       },
       "counts": [
-        0,
-        0,
         1,
         1,
         1,
@@ -6680,6 +8442,20 @@
         1,
         1,
         1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
         2
       ]
     },
@@ -6701,9 +8477,6 @@
         "7": 19
       },
       "counts": [
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6711,6 +8484,20 @@
         1,
         1,
         1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
         2
       ]
     },
@@ -6729,12 +8516,10 @@
         "4": 10,
         "5": 12,
         "6": 14,
-        "7": 18
+        "7": 18,
+        "8": 21
       },
       "counts": [
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6742,6 +8527,20 @@
         1,
         1,
         1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
         2
       ]
     },
@@ -6759,13 +8558,10 @@
         "3": 9,
         "4": 12,
         "5": 15,
-        "6": 18
+        "6": 18,
+        "7": 21
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6777,11 +8573,17 @@
         1,
         1,
         1,
-        1,
-        1,
-        1,
-        1,
-        1
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6798,14 +8600,10 @@
         "3": 10,
         "4": 14,
         "5": 17,
-        "6": 19
+        "6": 19,
+        "7": 22
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6818,9 +8616,16 @@
         1,
         1,
         1,
-        1,
-        1,
-        1
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6836,14 +8641,10 @@
         "2": 9,
         "3": 13,
         "4": 17,
-        "5": 19
+        "5": 19,
+        "6": 22
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6856,9 +8657,16 @@
         1,
         1,
         1,
-        1,
-        1,
-        1
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6874,16 +8682,10 @@
         "2": 10,
         "3": 13,
         "4": 16,
-        "5": 18
+        "5": 18,
+        "6": 22
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6896,7 +8698,16 @@
         1,
         1,
         1,
-        1
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6912,16 +8723,10 @@
         "2": 10,
         "3": 13,
         "4": 16,
-        "5": 19
+        "5": 19,
+        "6": 21
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6934,7 +8739,16 @@
         1,
         1,
         1,
-        1
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6949,15 +8763,10 @@
         "1": 7,
         "2": 10,
         "3": 15,
-        "4": 19
+        "4": 19,
+        "5": 21
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
@@ -6971,7 +8780,15 @@
         1,
         1,
         1,
-        1
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
       ]
     },
     {
@@ -6987,7 +8804,27 @@
         "3": 7
       },
       "counts": [
-        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
         1
       ]
     },
@@ -7004,8 +8841,27 @@
         "3": 9
       },
       "counts": [
-        0,
-        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
         1
       ]
     },
@@ -7024,16 +8880,28 @@
         "4": 18
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
         1,
-        2
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4
       ]
     },
     {
@@ -7051,16 +8919,28 @@
         "4": 18
       },
       "counts": [
-        0,
-        0,
-        0,
-        0,
-        0,
         1,
         1,
         1,
         1,
-        2
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4
       ]
     }
   ],
@@ -7085,7 +8965,9 @@
       7,
       8,
       8,
-      8
+      8,
+      9,
+      9
     ],
     "kitchen_module": [
       0,
@@ -7106,6 +8988,8 @@
       6,
       6,
       6,
+      7,
+      7,
       7,
       7
     ],
@@ -7129,7 +9013,9 @@
       7,
       7,
       8,
-      8
+      9,
+      9,
+      10
     ],
     "crafting_module": [
       0,
@@ -7151,7 +9037,9 @@
       5,
       6,
       7,
-      7
+      7,
+      7,
+      8
     ]
   },
   "aniimo": [
@@ -7174,7 +9062,9 @@
     42,
     43,
     44,
-    45
+    45,
+    46,
+    47
   ],
   "levelUpCosts": {
     "2": {
@@ -7306,6 +9196,20 @@
       "items": {
         "densified_timber_component": 490,
         "microcrystalline_ore_plate": 270
+      }
+    },
+    "21": {
+      "coins": 34300000,
+      "items": {
+        "densified_timber_component": 830,
+        "microcrystalline_ore_plate": 3720
+      }
+    },
+    "22": {
+      "coins": 52600000,
+      "items": {
+        "densified_timber_component": 1190,
+        "microcrystalline_ore_plate": 10580
       }
     }
   },
@@ -7529,6 +9433,8 @@
   "notes": {
     "facilityLimits": "Facility-count defaults now follow the current Aniimax release table. Aniimax marks counts as confirmed in game through RV 11; above RV 11, Farmland, Woodland and Mine continue their listed progression while other facility counts keep their RV 11 cap until further verification.",
     "unverifiedQuick": "Quick Wool and Quick Scales yields are repository values; screenshots confirm base recipes and module unlocks, not these quick yields.",
-    "energy": "Food energy values are included only where supplied screenshots verify them. Worker draw defaults to 10 energy per minute and is editable."
+    "energy": "Food energy values are included only where supplied screenshots verify them. Worker draw defaults to 10 energy per minute and is editable.",
+    "patchRV": "RV costs and worker capacity verified against client 3846247 through level 22. Facility/module capacities and production rates remain guide estimates.",
+    "patchPlanner": "Facility placement limits and upgrade RV levels, RV costs, worker capacity and module RV requirements use client 3846247. Recipe rates remain guide estimates; unlock conditions beyond RV must be checked in-game."
   }
 }

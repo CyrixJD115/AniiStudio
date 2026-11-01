@@ -1,15 +1,16 @@
 import Foundation
 
 struct LiveHomelandSession {
-    let capture: HomelandLiveCapture
-    let captureURL: URL
-    let capturedAt: Date
+    var capture: HomelandLiveCapture
+    var captureURL: URL
+    var capturedAt: Date
     let verification: HomelandCaptureVerification
     let package: HomelandScenePackage
     let objectMapping: [UInt32: String]
     let renderedPlacements: [String: HomelandRenderedPlacement]
     var coverageMessage: String? = nil
     var sceneLabel: String = "Captured furniture"
+    var readFromCurrentGame = false
 }
 
 @MainActor
@@ -22,6 +23,7 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
     }
 
     @Published private(set) var state: State = .idle
+    @Published private(set) var refreshError: String?
     @Published private(set) var selectedArea: HomelandCapturedArea?
 
     var isLoading: Bool {
@@ -31,6 +33,15 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
 
     private let captureService = HomelandLiveCaptureService()
     private let sceneService = HomelandSceneService()
+    private var generation = UUID()
+    private var readySessions:[HomelandCapturedArea:LiveHomelandSession]=[:]
+
+    private let captureOwned: @Sendable () throws -> URL
+
+    init(initialState: State = .idle, captureOwned: @escaping @Sendable () throws -> URL = { try HomelandOwnedCaptureService().capture() }) {
+        state = initialState
+        self.captureOwned = captureOwned
+    }
 
     static let currentBuild = HomelandBuild(
         server: .americas,
@@ -48,28 +59,62 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
             state = .failed("No live Homeland capture is available yet. Launch Aniimo through GameHub, enter your Homeland, then choose Read Current Game.")
             return
         }
-        await load(url: url, message: "Rebuilding your captured Homeland in native 3D…")
+        if url.lastPathComponent.hasPrefix("owned-homeland-") {
+            await loadOwned(url:url,area:selectedArea ?? .production)
+        } else { await load(url: url, message: "Rebuilding your captured Homeland in native 3D…") }
+    }
+
+    func readCurrentGame(area:HomelandCapturedArea) async {
+        if selectedArea != area && isLoading {generation=UUID();state = .idle}
+        selectedArea=area
+        await readCurrentGame()
     }
 
     func readCurrentGame() async {
         guard !isLoading else { return }
-        selectedArea = nil
-        state = .loading("Reading the running official Aniimo client without changing it…")
+        let area=selectedArea ?? .production
+        let ticket=UUID();generation=ticket
+        let previous = state,previousArea=selectedArea
+        defer {if generation==ticket && Task.isCancelled {restoreCancelledLoad(previous,previousArea:previousArea,requestedArea:area)}}
+        refreshError = nil
+        state = .loading("Reading the current owned Homeland map without changing it…")
         do {
-            let result = try await Task.detached(priority: .userInitiated) {
-                try Self.captureRunningGame()
-            }.value
-            await load(url: result.url, message: "Matching furniture IDs with native 3D assets…", ownershipPID: result.pid)
-        } catch {
-            state = .failed(error.localizedDescription)
+            let capture = captureOwned
+            let url = try await Task.detached(priority: .userInitiated) { try capture() }.value
+            guard generation==ticket,!Task.isCancelled else{return}
+            await loadOwned(url: url, area: area, ticket:ticket, currentRead:true)
+            guard generation==ticket else{return}
+            if case .failed(let reason) = state { restoreAfterRefreshFailure(previous, area: area, reason: reason) }
+        } catch { if generation==ticket {restoreAfterRefreshFailure(previous, area: area, reason: error.localizedDescription)} }
+    }
+
+    private func restoreCancelledLoad(_ previous:State,previousArea:HomelandCapturedArea?,requestedArea:HomelandCapturedArea) {
+        if case .ready(let session)=previous {
+            state=previous
+            selectedArea=previousArea ?? HomelandCapturedArea.allCases.first {session.verification.referenceBuildID=="owning-map-area-\($0.rawValue)"}
+        } else if let session=readySessions[requestedArea] {
+            selectedArea=requestedArea;state = .ready(session)
+        } else {
+            selectedArea=requestedArea;state = .failed("Map loading was cancelled. Choose Refresh map to try again.")
         }
+    }
+
+    private func restoreAfterRefreshFailure(_ previous: State, area: HomelandCapturedArea, reason: String) {
+        if case .ready(let session) = previous,
+           session.verification.referenceBuildID == "owning-map-area-\(area.rawValue)" {
+            state = previous
+            refreshError = "Refresh could not finish. Showing the previous saved map; its capture time is unchanged."
+        } else { state = .failed(reason) }
     }
 
     func loadResidentialCapture() async { await loadCapturedArea(.residential) }
 
     func loadCapturedArea(_ area: HomelandCapturedArea) async {
-        guard !isLoading else { return }
+        let ticket=UUID();generation=ticket
+        let previous=state,previousArea=selectedArea
+        defer {if generation==ticket && Task.isCancelled {restoreCancelledLoad(previous,previousArea:previousArea,requestedArea:area)}}
         selectedArea = area
+        refreshError = nil
         state = .loading("Reconstructing the captured \(area.title.lowercased()) with real models…")
         do {
             let folder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -80,17 +125,42 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
                 .max(by: {
                     ((try? $0.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast)
                     < ((try? $1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast)
-                }), let catalog = GameContentIndexService().loadCachedObjectCatalog()?.catalog else {
+                }) else {
                 throw LiveHomelandError.missingOwnedCapture
             }
-            let capture = try captureService.load(url: url)
-            let referenceScene: HomelandLayoutScene
-            if let cached = sceneService.cachedScene(build: Self.currentBuild) { referenceScene = cached }
-            else { referenceScene = try await sceneService.prepare(build: Self.currentBuild).scene }
-            let origin = try captureService.verifyAmericas2020(capture, scene: referenceScene, catalog: catalog)
-            guard origin.isExactMatch else { throw HomelandLiveCaptureError.incompatibleReference }
-            let owned = try HomelandOwnedSceneService().materialize(capture: capture, catalog: catalog,
-                assets: HomelandAssetLibraryService().load(), origin: origin, area: area.rawValue)
+            guard generation==ticket,!Task.isCancelled else{return}
+            await loadOwned(url:url,area:area,ticket:ticket)
+        } catch { if generation==ticket {state = .failed(error.localizedDescription)} }
+    }
+
+    private func loadOwned(url:URL,area:HomelandCapturedArea,ticket:UUID?=nil,currentRead:Bool=false) async {
+        let request=ticket ?? UUID();if ticket==nil {generation=request}
+        guard generation==request else{return}
+        selectedArea=area
+        state = .loading("Reconstructing the current captured \(area.title.lowercased())…")
+        do {
+            guard let catalog=GameContentIndexService().loadCachedObjectCatalog()?.catalog else{throw LiveHomelandError.missingOwnedCapture}
+            let capture = try await Task.detached(priority: .userInitiated) {
+                try HomelandLiveCaptureService().load(url: url)
+            }.value
+            guard generation==request,!Task.isCancelled else{return}
+            let capturedAt=(try? url.resourceValues(forKeys:[.contentModificationDateKey]).contentModificationDate) ?? Date()
+            if var cached=readySessions[area],cached.capture.hasSameOwnedPlacements(as:capture) {
+                cached.capture=capture;cached.captureURL=url;cached.capturedAt=capturedAt;cached.readFromCurrentGame=currentRead
+                readySessions[area]=cached;state = .ready(cached);return
+            }
+            let ownedAndOrigin = try await Task.detached(priority:.userInitiated) {
+                let calibration=HomelandWorldEnvironment().savedCalibration(area:area.rawValue)
+                let origin=HomelandCaptureVerification(referenceBuildID:"owning-map-area-\(area.rawValue)",
+                    expectedPlacements:capture.rows.count,matchedPlacements:capture.rows.count,
+                    matchedFurnitureKinds:0,expectedFurnitureKinds:0,
+                    originX:calibration?.originX ?? 0,originZ:calibration?.originZ ?? 0)
+                let owned=try HomelandOwnedSceneService().materialize(capture:capture,catalog:catalog,
+                    assets:HomelandAssetLibraryService().load(),origin:origin,area:area.rawValue)
+                return (origin,owned)
+            }.value
+            guard generation==request,!Task.isCancelled else{return}
+            let (origin,owned)=ownedAndOrigin
             let rendered = owned.materialized.package.scene.instanceCount
             state = .ready(LiveHomelandSession(capture: capture, captureURL: url,
                 capturedAt: try url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate ?? Date(),
@@ -101,8 +171,9 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
                 package: owned.materialized.package, objectMapping: owned.objectMapping,
                 renderedPlacements: owned.materialized.placements,
                 coverageMessage: "\(rendered) of \(owned.totalRecords) records rendered · \(owned.missingModelRecords) need models · \(owned.unsupportedRotationRecords) need rotation mapping · \(owned.ambiguousRecords) ambiguous",
-                sceneLabel: "\(area.title) · captured map"))
-        } catch { state = .failed(error.localizedDescription) }
+                sceneLabel: "\(area.title) · captured map",readFromCurrentGame:currentRead))
+            if case .ready(let session)=state {readySessions[area]=session}
+        } catch { if generation==request {state = .failed(error.localizedDescription)} }
     }
 
     private func load(url: URL, message: String, ownershipPID: Int? = nil) async {
@@ -166,7 +237,7 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
         guard let support = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return nil }
         let folder = support.appendingPathComponent("AniimoAtlas/Captures", isDirectory: true)
         return ((try? fm.contentsOfDirectory(at: folder, includingPropertiesForKeys: [.contentModificationDateKey])) ?? [])
-        .filter { $0.pathExtension == "jsonl" && $0.lastPathComponent.contains("ornaments-live") }
+        .filter { $0.pathExtension == "jsonl" && ($0.lastPathComponent.contains("ornaments-live") || $0.lastPathComponent.hasPrefix("owned-homeland-")) }
         .max { lhs, rhs in
             let left = (try? lhs.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
             let right = (try? rhs.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast

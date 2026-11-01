@@ -23,9 +23,13 @@ struct HomelandBuild: Codable, Identifiable, Hashable {
     let rvLevel: Int?
     let likes: Int
     let previewURL: URL?
+    var pieceCount: Int? = nil
+    var configuredCosts: [String: Int]? = nil
 
+    var localName:String? = nil
+    var isLocal:Bool {localName != nil && (900_000_000..<1_000_000_000).contains(number)}
     var id: String { "\(server.rawValue)-\(number)" }
-    var title: String { kind.isEmpty ? "Homeland build" : kind }
+    var title: String { localName ?? (kind.isEmpty ? "Homeland build" : kind) }
     var detailURL: URL {
         URL(string: "https://aniidex.com/homeland/layout-codes/\(server.rawValue)/\(number)/")!
     }

@@ -1,0 +1,1000 @@
+{
+  "version": 1,
+  "title": "October 29 collection guide",
+  "build": "26281320",
+  "date": "2026-10-29",
+  "sources": [
+    "https://aniimo.com/newslist/detail/100244",
+    "https://aniimo.kr/en/systems/season1-wind-departure-ha-preview"
+  ],
+  "schedule": [
+    {
+      "window": "Nov 2–9",
+      "aniimo": "Pouchwisp",
+      "isles": "Rosy Mirelands",
+      "plains": "Tideblossom Coast"
+    },
+    {
+      "window": "Nov 9–16",
+      "aniimo": "Royalby",
+      "isles": "Wildwater Gorge",
+      "plains": "Sea of Flowers"
+    },
+    {
+      "window": "Nov 16–23",
+      "aniimo": "Jeburst",
+      "isles": "Cloudreach Falls",
+      "plains": "Russet Highlands"
+    },
+    {
+      "window": "Nov 23–30",
+      "aniimo": "Glameep",
+      "isles": "Crescent Bay",
+      "plains": "Echoback Landing"
+    },
+    {
+      "window": "Nov 30–Dec 7",
+      "aniimo": "All four",
+      "isles": "Their respective regions",
+      "plains": "Their respective regions"
+    }
+  ],
+  "forms": [
+    {
+      "id": "1022300",
+      "name": "Hoptail",
+      "form": "Basic Form",
+      "habitats": [],
+      "status": "Event gate: check availability",
+      "route": "Evolve Bolty after its Aniimo Discovery missions; see the exact requirements below.",
+      "evolution": [
+        {
+          "from": "Bolty · Basic Form",
+          "requirements": [
+            "Complete the related missions of the Aniimo Discovery event.",
+            "Aniimo reaches Lv. 33.",
+            "1 × Gust Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [
+        "Preview schedule: Nov 6–19. This date is from the community transcription of the official preview; confirm the event screen."
+      ],
+      "evidence": "Client evolution + preview event schedule",
+      "source": "https://aniimo.kr/en/systems/season1-wind-departure-ha-preview"
+    },
+    {
+      "id": "1038100",
+      "name": "Reefish",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay",
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Crescent Bay, Rosy Mirelands.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1038103",
+      "name": "Reefish",
+      "form": "Rainfall Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Environment-dependent",
+      "route": "Search and catch in Crescent Bay.",
+      "evolution": [],
+      "notes": [
+        "Search suggestion: revisit the mapped habitat during rain. Exact wild spawn timing is not verified."
+      ],
+      "evidence": "Client habitat + form identity; environmental search advice is inference",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1038300",
+      "name": "Coraliz",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Crescent Bay.",
+      "evolution": [
+        {
+          "from": "Reefish · Basic Form",
+          "requirements": [
+            "Aniimo level 57",
+            "1 × Loam Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1038303",
+      "name": "Coraliz",
+      "form": "Rainfall Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Environment-dependent",
+      "route": "Evolve the exact source form below; the client also maps this form to Crescent Bay.",
+      "evolution": [
+        {
+          "from": "Reefish · Rainfall Form",
+          "requirements": [
+            "Aniimo reaches Lv. 57.",
+            "Rainy",
+            "1 × Loam Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [
+        "Search suggestion: revisit the mapped habitat during rain. Exact wild spawn timing is not verified."
+      ],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1039100",
+      "name": "Saws",
+      "form": "Basic Form",
+      "habitats": [
+        "Wildwater Gorge",
+        "Cloudreach Falls"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Wildwater Gorge, Cloudreach Falls.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1039300",
+      "name": "Whirlbite",
+      "form": "Basic Form",
+      "habitats": [
+        "Wildwater Gorge",
+        "Cloudreach Falls"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Wildwater Gorge, Cloudreach Falls.",
+      "evolution": [
+        {
+          "from": "Saws · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 64.",
+            "1 × Wave Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1039301",
+      "name": "Whirlbite",
+      "form": "Prismana Form",
+      "habitats": [
+        "Cloudreach Falls"
+      ],
+      "status": "Pursue now",
+      "route": "Regional Prismana in Cloudreach Falls. Build regional Prismatic Energy through Nurture and watch the map.",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1040100",
+      "name": "Prawnch",
+      "form": "Basic Form",
+      "habitats": [
+        "Wildwater Gorge"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Wildwater Gorge.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1040300",
+      "name": "Jabster",
+      "form": "Basic Form",
+      "habitats": [
+        "Wildwater Gorge"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Wildwater Gorge.",
+      "evolution": [
+        {
+          "from": "Prawnch · Basic Form",
+          "requirements": [
+            "Defeat Alpha Jabster.",
+            "Aniimo reaches Lv. 64.",
+            "1 × Freeze Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1040302",
+      "name": "Jabster",
+      "form": "Prismana Form",
+      "habitats": [
+        "Wildwater Gorge"
+      ],
+      "status": "Pursue now",
+      "route": "Regional Prismana in Wildwater Gorge. Build regional Prismatic Energy through Nurture and watch the map.",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1040303",
+      "name": "Jabster",
+      "form": "Rainfall Form",
+      "habitats": [
+        "Wildwater Gorge"
+      ],
+      "status": "Environment-dependent",
+      "route": "Search and catch in Wildwater Gorge.",
+      "evolution": [],
+      "notes": [
+        "Search suggestion: revisit the mapped habitat during rain. Exact wild spawn timing is not verified."
+      ],
+      "evidence": "Client habitat + form identity; environmental search advice is inference",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1044400",
+      "name": "Ekrim",
+      "form": "Basic Form",
+      "habitats": [
+        "Cloudreach Falls"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Cloudreach Falls.",
+      "evolution": [
+        {
+          "from": "Eko · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 25.",
+            "BREAK Talent Level greater than or equal to 6.",
+            "1 × Night Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1044403",
+      "name": "Ekrim",
+      "form": "Prismana Form",
+      "habitats": [],
+      "status": "Pursue now",
+      "route": "Claim through Season Achievements.",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1054100",
+      "name": "Lilipole",
+      "form": "Basic Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Rosy Mirelands.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1054300",
+      "name": "Scrubbit",
+      "form": "Basic Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Rosy Mirelands.",
+      "evolution": [
+        {
+          "from": "Lilipole · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 62.",
+            "1 × Wave Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1054302",
+      "name": "Scrubbit",
+      "form": "Rainfall Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Environment-dependent",
+      "route": "Search and catch in Rosy Mirelands.",
+      "evolution": [],
+      "notes": [
+        "Search suggestion: revisit the mapped habitat during rain. Exact wild spawn timing is not verified."
+      ],
+      "evidence": "Client habitat + form identity; environmental search advice is inference",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1057100",
+      "name": "Hypnowl",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay",
+        "Wildwater Gorge",
+        "Cloudreach Falls"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Crescent Bay, Wildwater Gorge, Cloudreach Falls.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1057300",
+      "name": "Mesmerowl",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Crescent Bay.",
+      "evolution": [
+        {
+          "from": "Hypnowl · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 57.",
+            "1 × Gust Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1057400",
+      "name": "Hypnyto",
+      "form": "Basic Form",
+      "habitats": [],
+      "status": "Pursue now",
+      "route": "Claim the free Standard Companion Handbook egg, or use the evolution route below.",
+      "evolution": [
+        {
+          "from": "Hypnowl · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 57.",
+            "Own the Bewitching Eye Soul item.",
+            "1 × Gust Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Official update notice",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1057403",
+      "name": "Hypnyto",
+      "form": "Prismana Form",
+      "habitats": [],
+      "status": "Pursue now",
+      "route": "Advanced Companion Handbook reward (paid tier).",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1058100",
+      "name": "Bubbeep",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Crescent Bay.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1058300",
+      "name": "Glameep",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Crescent Bay.",
+      "evolution": [
+        {
+          "from": "Bubbeep · Basic Form",
+          "requirements": [
+            "Defeat the Alpha Glameep",
+            "Aniimo reaches Lv. 57.",
+            "1 × Sprout Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1058301",
+      "name": "Glameep",
+      "form": "Prismana Form",
+      "habitats": [],
+      "status": "Scheduled: Nov 23–30",
+      "route": "Vein Abundance: follow the dated schedule above.",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1058302",
+      "name": "Glameep",
+      "form": "Tempest Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Environment-dependent",
+      "route": "Search and catch in Crescent Bay.",
+      "evolution": [],
+      "notes": [
+        "Search suggestion: revisit during storms. Do not assume ordinary rain satisfies a storm requirement."
+      ],
+      "evidence": "Client habitat + form identity; environmental search advice is inference",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1059100",
+      "name": "Sugarfish",
+      "form": "Basic Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Rosy Mirelands.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1059300",
+      "name": "Sugarslime",
+      "form": "Basic Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Rosy Mirelands.",
+      "evolution": [
+        {
+          "from": "Sugarfish · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 62.",
+            "1 × Freeze Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1059400",
+      "name": "Sugartini",
+      "form": "Basic Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Rosy Mirelands.",
+      "evolution": [
+        {
+          "from": "Sugarfish · Basic Form",
+          "requirements": [
+            "Defeat Alpha Sugartini.",
+            "Aniimo reaches Lv. 62.",
+            "1 × Freeze Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [
+        "Sugartini is a direct Sugarfish branch; the indexed route is not Sugarslime → Sugartini."
+      ],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1059403",
+      "name": "Sugartini",
+      "form": "Prismana Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Regional Prismana in Rosy Mirelands. Build regional Prismatic Energy through Nurture and watch the map.",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1060100",
+      "name": "Salabask",
+      "form": "Basic Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Rosy Mirelands.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1060300",
+      "name": "Crocobask",
+      "form": "Basic Form",
+      "habitats": [
+        "Rosy Mirelands"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Rosy Mirelands.",
+      "evolution": [
+        {
+          "from": "Salabask · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 62.",
+            "1 × Sprout Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1061100",
+      "name": "Puffby",
+      "form": "Basic Form",
+      "habitats": [
+        "Rosy Mirelands",
+        "Wildwater Gorge",
+        "Cloudreach Falls"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Rosy Mirelands, Wildwater Gorge, Cloudreach Falls.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1061300",
+      "name": "Buffby",
+      "form": "Basic Form",
+      "habitats": [
+        "Wildwater Gorge"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Wildwater Gorge.",
+      "evolution": [
+        {
+          "from": "Puffby · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 62.",
+            "1 × Gust Stone",
+            "1 × Hearty Honeybrew"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [
+        "Both are configured as branches from Puffby. Do not evolve Buffby expecting an indexed Buffby → Royalby step. Extra branch eligibility is not distinguished by the extracted requirement text; inspect the Evolution panel before committing."
+      ],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1061400",
+      "name": "Royalby",
+      "form": "Basic Form",
+      "habitats": [
+        "Wildwater Gorge"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Wildwater Gorge.",
+      "evolution": [
+        {
+          "from": "Puffby · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 62.",
+            "1 × Gust Stone",
+            "1 × Hearty Honeybrew"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [
+        "Both are configured as branches from Puffby. Do not evolve Buffby expecting an indexed Buffby → Royalby step. Extra branch eligibility is not distinguished by the extracted requirement text; inspect the Evolution panel before committing."
+      ],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1061403",
+      "name": "Royalby",
+      "form": "Prismana Form",
+      "habitats": [],
+      "status": "Scheduled: Nov 9–16",
+      "route": "Vein Abundance: follow the dated schedule above.",
+      "evolution": [],
+      "notes": [
+        "Both are configured as branches from Puffby. Do not evolve Buffby expecting an indexed Buffby → Royalby step. Extra branch eligibility is not distinguished by the extracted requirement text; inspect the Evolution panel before committing.",
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1062100",
+      "name": "Popapus",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Crescent Bay.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1062300",
+      "name": "Gachapus",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Crescent Bay.",
+      "evolution": [
+        {
+          "from": "Popapus · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 57.",
+            "1 × Wave Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1062304",
+      "name": "Gachapus",
+      "form": "Prismana Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Regional Prismana in Crescent Bay. Build regional Prismatic Energy through Nurture and watch the map.",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1063100",
+      "name": "Coinwisp",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay",
+        "Rosy Mirelands",
+        "Wildwater Gorge"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Crescent Bay, Rosy Mirelands, Wildwater Gorge.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1063300",
+      "name": "Pouchwisp",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Crescent Bay.",
+      "evolution": [
+        {
+          "from": "Coinwisp · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 57.",
+            "1 × Night Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1063303",
+      "name": "Pouchwisp",
+      "form": "Prismana Form",
+      "habitats": [],
+      "status": "Scheduled: Nov 2–9",
+      "route": "Vein Abundance: follow the dated schedule above.",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1065100",
+      "name": "Dewlop",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Crescent Bay.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1065101",
+      "name": "Dewlop",
+      "form": "Waterfall Form",
+      "habitats": [
+        "Cloudreach Falls"
+      ],
+      "status": "Environment-dependent",
+      "route": "Search and catch in Cloudreach Falls.",
+      "evolution": [],
+      "notes": [
+        "Search Cloudreach Falls for the Waterfall form; a normal Crescent Bay individual is a different form."
+      ],
+      "evidence": "Client habitat + form identity; environmental search advice is inference",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1065300",
+      "name": "Dewple",
+      "form": "Basic Form",
+      "habitats": [
+        "Crescent Bay"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Crescent Bay.",
+      "evolution": [
+        {
+          "from": "Dewlop · Basic Form",
+          "requirements": [
+            "Aniimo reaches Lv. 57.",
+            "1 × Wave Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1065301",
+      "name": "Dewple",
+      "form": "Waterfall Form",
+      "habitats": [
+        "Cloudreach Falls"
+      ],
+      "status": "Environment-dependent",
+      "route": "Evolve the exact source form below; the client also maps this form to Cloudreach Falls.",
+      "evolution": [
+        {
+          "from": "Dewlop · Waterfall Form",
+          "requirements": [
+            "Aniimo reaches Lv. 57.",
+            "Located at Cloudreach Falls",
+            "1 × Wave Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [
+        "Search Cloudreach Falls for the Waterfall form; a normal Crescent Bay individual is a different form."
+      ],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1069100",
+      "name": "Jeglid",
+      "form": "Basic Form",
+      "habitats": [
+        "Cloudreach Falls"
+      ],
+      "status": "Pursue now",
+      "route": "Search and catch in Cloudreach Falls.",
+      "evolution": [],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1069102",
+      "name": "Jeglid",
+      "form": "Tempest Form",
+      "habitats": [
+        "Cloudreach Falls"
+      ],
+      "status": "Environment-dependent",
+      "route": "Search and catch in Cloudreach Falls.",
+      "evolution": [],
+      "notes": [
+        "Search suggestion: revisit during storms. Do not assume ordinary rain satisfies a storm requirement."
+      ],
+      "evidence": "Client habitat + form identity; environmental search advice is inference",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1069300",
+      "name": "Jeburst",
+      "form": "Basic Form",
+      "habitats": [
+        "Cloudreach Falls"
+      ],
+      "status": "Pursue now",
+      "route": "Evolve the exact source form below; the client also maps this form to Cloudreach Falls.",
+      "evolution": [
+        {
+          "from": "Jeglid · Basic Form",
+          "requirements": [
+            "Complete “Land of Raging Currents.”",
+            "Aniimo reaches Lv. 66.",
+            "1 × Wave Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1069301",
+      "name": "Jeburst",
+      "form": "Prismana Form",
+      "habitats": [],
+      "status": "Scheduled: Nov 16–23",
+      "route": "Vein Abundance: follow the dated schedule above.",
+      "evolution": [],
+      "notes": [
+        "A Prismana Orb is a conversion route only after this species’ Prismana form has been unlocked; it is not a first-unlock shortcut."
+      ],
+      "evidence": "Official update notice + client form record",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    },
+    {
+      "id": "1069302",
+      "name": "Jeburst",
+      "form": "Tempest Form",
+      "habitats": [
+        "Cloudreach Falls"
+      ],
+      "status": "Environment-dependent",
+      "route": "Evolve the exact source form below; the client also maps this form to Cloudreach Falls.",
+      "evolution": [
+        {
+          "from": "Jeglid · Tempest Form",
+          "requirements": [
+            "Complete “Land of Raging Currents.”",
+            "Aniimo reaches Lv. 66.",
+            "During stormy weather",
+            "1 × Wave Stone"
+          ],
+          "unresolved": false
+        }
+      ],
+      "notes": [
+        "Search suggestion: revisit during storms. Do not assume ordinary rain satisfies a storm requirement."
+      ],
+      "evidence": "Client habitat index",
+      "source": "Local patch data"
+    },
+    {
+      "id": "1071300",
+      "name": "Jaguaraun",
+      "form": "Basic Form",
+      "habitats": [],
+      "status": "Later: Nov 20",
+      "route": "Fantasy Resonance starts Nov 20; complete its event quests for the offering recipe.",
+      "evolution": [],
+      "notes": [
+        "Exact offering materials and final encounter sequence are not yet verified."
+      ],
+      "evidence": "Official update notice",
+      "source": "https://aniimo.com/newslist/detail/100244"
+    }
+  ]
+}

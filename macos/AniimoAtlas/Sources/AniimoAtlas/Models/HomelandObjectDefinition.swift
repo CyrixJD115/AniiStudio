@@ -1,5 +1,10 @@
 import Foundation
 
+struct HomelandMaterialCost: Codable, Equatable {
+    let itemID: UInt32
+    let amount: Int
+}
+
 struct HomelandObjectDefinition: Codable, Identifiable, Equatable {
     let id: UInt32
     let nameKey: UInt32?
@@ -19,13 +24,24 @@ struct HomelandObjectDefinition: Codable, Identifiable, Equatable {
     let upgradeGroupID: UInt32?
     let upgradeLevel: Int?
 
+    var materialCosts: [HomelandMaterialCost]? = nil
+    var allowsThreeAxisRotation: Bool? = nil
+    var allowsThreeAxisScale: Bool? = nil
+    var minimumScale: Double? = nil
+    var maximumScale: Double? = nil
+    var allowsVerticalAdjustment: Bool? = nil
+    var modelScale: Double? = nil
+    var prefabScale: Double? = nil
+    var rotationXLimits: [Double]? = nil
+    var rotationYLimits: [Double]? = nil
+
     var prefabName: String? {
         prefabResourceID?
             .trimmingCharacters(in: CharacterSet(charactersIn: "$"))
             .replacingOccurrences(of: ".prefab", with: "")
     }
     var isFacility: Bool { facilityID != nil }
-    var isPurchasable: Bool { buyCurrencyID != nil && buyAmount != nil }
+    var isPurchasable: Bool { (buyCurrencyID != nil && buyAmount != nil) || materialCosts?.isEmpty == false }
 }
 
 struct HomelandObjectCatalog: Codable, Equatable {

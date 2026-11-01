@@ -1,7 +1,7 @@
 import Foundation
 
-struct HomelandZoneDefinition: Identifiable, Equatable {
-    enum Area: Int, CaseIterable {
+struct HomelandZoneDefinition: Identifiable, Equatable, Codable {
+    enum Area: Int, CaseIterable, Codable {
         case production = 0
         case building = 1
         case seasonal = 2

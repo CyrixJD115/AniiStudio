@@ -2,10 +2,14 @@ import SwiftUI
 
 struct LiveHomelandTransformInspector: View {
     let title: String
+    var displayedInstanceNumber: Int? = nil
     let selection: HomelandSceneSelection
     @Binding var transform: HomelandSceneTransform
     let isDrafted: Bool
     let reset: () -> Void
+    let canApplyToGame: Bool
+    let applyingToGame: Bool
+    let applyToGame: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -13,7 +17,7 @@ struct LiveHomelandTransformInspector: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("SELECTED OBJECT").font(.caption2.bold()).tracking(0.8).foregroundStyle(.secondary)
                     Text(title).font(.headline)
-                    Text("Instance \(selection.ordinal + 1)").font(.caption).foregroundStyle(.secondary)
+                    Text("Instance \(displayedInstanceNumber ?? (selection.ordinal + 1))").font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
                 if isDrafted {
@@ -39,7 +43,9 @@ struct LiveHomelandTransformInspector: View {
                 Label("Local preview only", systemImage: "eye.fill")
                     .font(.caption).foregroundStyle(.secondary)
             }
-            Text("Atlas can preview this transform now. Saving it to Aniimo remains locked until this object is paired with its stable server instance ID and the official client accepts a reversible test edit.")
+            Button(applyingToGame ? "Confirming in Aniimo…" : "Apply Position to Game", action: applyToGame)
+                .buttonStyle(.borderedProminent).disabled(!canApplyToGame || applyingToGame)
+            Text("Position edits are available for verified items. Rotation and scale remain local previews. Game positions use 1 cm increments.")
                 .font(.caption2).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
         }
         .padding(13)

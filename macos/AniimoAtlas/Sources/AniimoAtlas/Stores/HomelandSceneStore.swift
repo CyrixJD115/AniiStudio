@@ -11,6 +11,7 @@ final class HomelandSceneStore: ObservableObject {
     }
 
     @Published private(set) var state: State = .idle
+    @Published private(set) var usingSavedScene = false
     private let service = HomelandSceneService()
     private var loadedBuildID: HomelandBuild.ID?
 
@@ -18,10 +19,16 @@ final class HomelandSceneStore: ObservableObject {
         guard loadedBuildID != build.id else { return }
         loadedBuildID = build.id
         state = .loading
+        usingSavedScene = false
         do {
             state = .ready(try await service.prepare(build: build))
         } catch {
-            state = .failed(error.localizedDescription)
+            if let package = service.cachedPackage(build: build) {
+                usingSavedScene = true
+                state = .ready(package)
+            } else {
+                state = .failed(error.localizedDescription)
+            }
         }
     }
 

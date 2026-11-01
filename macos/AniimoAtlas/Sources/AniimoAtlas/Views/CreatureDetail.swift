@@ -4,6 +4,7 @@ struct CreatureDetail: View {
  let requestedFormID: String?
  @Binding var favorites: String
  @ObservedObject var collection: CollectionStore
+ var selectForm: ((Creature, String) -> Void)? = nil
  let selectCreature: (Creature) -> Void
  @State private var formID = ""
  @State private var appearanceID = "common"
@@ -24,14 +25,26 @@ struct CreatureDetail: View {
      Button { showModels = true } label: { Image(systemName: "cube.transparent") }.help("Open 3D model studio")
     }
     HStack(alignment: .firstTextBaseline) {
-     Text(creature.name).font(.system(size: 34, weight: .bold, design: .rounded)).minimumScaleFactor(0.6).lineLimit(1)
+     Text(creature.name).font(.system(size: 38, weight: .bold, design: .rounded)).minimumScaleFactor(0.6).lineLimit(1)
      Spacer()
      Text(creature.stage.uppercased()).font(.system(size: 10, weight: .bold, design: .monospaced)).padding(8).background(form.color.opacity(0.15), in: Capsule())
     }
     HStack { ForEach(form.elements, id: \.self) { Text($0).foregroundStyle(elementColor($0)) }; Text("·  \(creature.role)").foregroundStyle(.secondary); Spacer(); Text("\(creature.forms.count) forms").foregroundStyle(.secondary) }.font(.caption.bold())
-    Picker("Form", selection: Binding(get: { form.id }, set: { formID = $0; appearanceID = "common"; animated = false })) {
-     ForEach(creature.forms) { Text($0.name).tag($0.id) }
+    HStack(spacing: 12) {
+     Text("FORM").font(.system(size: 9, weight: .semibold, design: .monospaced)).tracking(1.3).foregroundStyle(.secondary)
+     Menu {
+      Picker("Form", selection: Binding(get: { form.id }, set: { formID = $0; appearanceID = "common"; animated = false })) {
+       ForEach(creature.forms) { Text($0.name).tag($0.id) }
+      }
+     } label: { StudioMenuLabel(title: form.name) }.menuStyle(.borderlessButton).menuIndicator(.hidden).frame(maxWidth: 265).accessibilityLabel("Form: " + form.name)
+     Spacer()
     }
+    HStack {
+     Label(collection.isFormCaught(form.id) ? "Form caught" : "Form not recorded", systemImage: collection.isFormCaught(form.id) ? "checkmark.seal.fill" : "circle").foregroundStyle(collection.isFormCaught(form.id) ? .green : .secondary)
+     Spacer()
+     if collection.hasCaughtAppearance(form: form.id) { Text("From your appearance tracker").font(.caption).foregroundStyle(.secondary) }
+     else { Button(collection.recordedForms.contains(form.id) ? "Unmark form" : "Mark form caught") { collection.setFormCaught(form.id, caught: !collection.recordedForms.contains(form.id)) } }
+    }.font(.caption)
     AppearanceStage(form: form, appearance: appearance, animated: $animated)
     if !form.appearances.isEmpty {
      VStack(alignment: .leading, spacing: 10) {
@@ -57,12 +70,13 @@ struct CreatureDetail: View {
     } else {
      Label("Rendered variants are not yet available for this form.", systemImage: "photo.badge.exclamationmark").font(.caption).foregroundStyle(.secondary)
     }
-    Picker("Details", selection: $detailTab) { ForEach(["Overview", "Abilities", "Evolution"], id: \.self) { Text($0).tag($0) } }.pickerStyle(.segmented)
-    CreatureInformation(creature: creature, form: form, tab: detailTab, selectCreature: selectCreature)
+    StudioSegments(values: ["Overview", "Abilities", "Evolution"], selected: $detailTab)
+    CreatureInformation(creature: creature, form: form, tab: detailTab, selectForm: selectForm, selectCreature: selectCreature)
     Divider()
-    HStack { Button("Full source record", systemImage: "book") { showReference = true }; Spacer(); Text("Data & renders: Aniidex").font(.caption2).foregroundStyle(.secondary) }
-   }.padding(24)
+    HStack { Button("Full source record", systemImage: "book") { showReference = true }; Spacer(); Text("Data: Aniidex + installed client").font(.caption2).foregroundStyle(.secondary) }
+   }.padding(27)
   }
+  .atlasGlass(cornerRadius: 26).padding(.vertical, 12).padding(.trailing, 12)
   .onAppear { if let requestedFormID { formID = requestedFormID } }
   .onChange(of: requestedFormID) { _, id in if let id { formID = id; appearanceID = "common"; animated = false } }
   .onChange(of: creature.id) { formID = requestedFormID ?? ""; appearanceID = "common"; animated = false }

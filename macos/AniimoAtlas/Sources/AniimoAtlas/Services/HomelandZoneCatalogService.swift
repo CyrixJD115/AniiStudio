@@ -2,11 +2,21 @@ import Foundation
 
 struct HomelandZoneCatalogService {
     func loadCurrentMap(pmdataURL: URL) throws -> [HomelandZoneDefinition] {
-        let table = try PMDataDecoder(url: pmdataURL).decodeTable(named: "new_homeland_zone_unlock_config_data")
+        try loadMap(pmdataURL: pmdataURL, layout: .newMap)
+    }
+
+    /// Live callers must supply the actually observed switch, not infer it
+    /// from a debug endpoint that may still enumerate the legacy table.
+    func loadObservedMap(pmdataURL: URL, useNewMap: Bool) throws -> [HomelandZoneDefinition] {
+        try loadMap(pmdataURL: pmdataURL, layout: .observed(useNewMap: useNewMap))
+    }
+
+    func loadMap(pmdataURL: URL, layout: HomelandMapLayout) throws -> [HomelandZoneDefinition] {
+        let table = try PMDataDecoder(url: pmdataURL).decodeTable(named: layout.tableName)
         let rows: [(zoneID: Int, area: HomelandZoneDefinition.Area, value: [String: PMDataValue])] = table.compactMap { key, value in
             guard let zoneID = Int(key), let row = value.table,
-                  let areaNumber = row["areaId"]?.number,
-                  let area = HomelandZoneDefinition.Area(rawValue: Int(areaNumber)) else { return nil }
+                  let areaNumber = Int(exactly: row["areaId"]?.number ?? 0),
+                  let area = HomelandZoneDefinition.Area(rawValue: areaNumber) else { return nil }
             return (zoneID, area, row)
         }
         let grouped = Dictionary(grouping: rows, by: \.area)
@@ -18,7 +28,7 @@ struct HomelandZoneCatalogService {
                     id: row.zoneID,
                     area: area,
                     ordinal: ordinalIndex + 1,
-                    showNameKey: row.value["showName"]?.number.map(UInt32.init),
+                    showNameKey: row.value["showName"]?.number.flatMap { UInt32(exactly: $0) },
                     prefabX: position?["1"]?.number,
                     prefabY: position?["2"]?.number
                 ))

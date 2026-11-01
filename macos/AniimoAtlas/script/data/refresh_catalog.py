@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='atlas-catalog-') as tmp:
  urls=list(dict.fromkeys(re.findall(r'(?:href|src)="(/_nuxt/[^" ]+\.js)',page)))
  assert urls,'No public page assets found'
  with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool: chunks=list(pool.map(fetch,urls))
- pet=next(s for s in chunks if re.search(r'var \w+=\{pets:JSON.parse',s))
+ pet=next(s for s in chunks if re.search(r'var \w+=\{pets:JSON.parse',s) and 'stageLabel' in s and 'forms' in s)
  pets=Reader(pet,pet.index('{')).read()
  detail=next(s for s in chunks if 'basePetId:1005100,name:`Emberpup`' in s)
  match=re.search(r'\w+=(\{1005101:\{variantId:)',detail);assert match
@@ -27,4 +27,7 @@ with tempfile.TemporaryDirectory(prefix='atlas-catalog-') as tmp:
  assert len(pets['pets'])>=100 and len(variants)>=123 and len(images)>=209,'Catalog coverage unexpectedly shrank'
  for name,value in [('atlas-data',pets),('atlas-Mn',variants),('atlas-Tr',videos),('atlas-images',images)]:
   (cache/(name+'.json')).write_text(json.dumps(value))
+ if os.environ.get('ATLAS_CAPTURE_INPUTS'):
+  saved=pathlib.Path(os.environ['ATLAS_CAPTURE_INPUTS']);saved.mkdir(parents=True,exist_ok=True)
+  for item in cache.glob('*.json'):(saved/item.name).write_bytes(item.read_bytes())
  subprocess.run([sys.executable,str(root/'script/data/build_catalog.py')],env={**os.environ,'ATLAS_CATALOG_INPUTS':str(cache)},check=True)

@@ -2,12 +2,20 @@ import SwiftUI
 
 struct HomelandBuildDetailView: View {
     let build: HomelandBuild
+    @ObservedObject var gameConnection: HomelandGameConnectionStore
+    @ObservedObject var favorites: HomelandBuildFavoritesStore
+
+    init(build: HomelandBuild, favorites: HomelandBuildFavoritesStore, gameConnection: HomelandGameConnectionStore) {
+        self.build = build
+        self.favorites = favorites
+        self.gameConnection = gameConnection
+    }
 
     var body: some View {
         HStack(spacing: 0) {
             VStack(spacing: 0) {
                 stageHeader
-                HomelandSceneView(build: build)
+                HomelandSceneView(build: build, gameConnection: gameConnection)
                     .padding([.horizontal, .bottom], 16)
             }
             Divider().opacity(0.5)
@@ -20,9 +28,13 @@ struct HomelandBuildDetailView: View {
         HStack(spacing: 14) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(build.title).font(.title2.bold())
-                Text("Aniidex #\(build.number) · \(build.server.name)").font(.caption).foregroundStyle(.secondary)
+                Text(build.isLocal ? "Local design · \(build.server.name)":"Aniidex #\(build.number) · \(build.server.name)").font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
+            Button { favorites.toggle(build) } label: {
+                Label(favorites.contains(build) ? "Saved" : "Save build",
+                      systemImage: favorites.contains(build) ? "star.fill" : "star")
+            }.buttonStyle(.bordered).help("Save this build on this Mac")
             Label("Direct 3D", systemImage: "cube.transparent.fill")
                 .font(.caption.weight(.semibold)).foregroundStyle(.green)
                 .padding(.horizontal, 10).padding(.vertical, 6).atlasGlass(cornerRadius: 10)
@@ -32,10 +44,7 @@ struct HomelandBuildDetailView: View {
     private var inspector: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                AsyncImage(url: build.previewURL) { phase in
-                    if let image = phase.image { image.resizable().scaledToFill() }
-                    else { Color.secondary.opacity(0.12) }
-                }.frame(height: 150).clipShape(RoundedRectangle(cornerRadius: 18))
+                HomelandBuildArtwork(build:build).frame(height:150).clipShape(RoundedRectangle(cornerRadius:18))
 
                 inspectorSection("BUILD") {
                     fact("Creator", build.designer)
@@ -44,16 +53,19 @@ struct HomelandBuildDetailView: View {
                     fact("Community likes", build.likes.formatted())
                 }
                 inspectorSection("3D SOURCE") {
-                    Label("Manifest loaded directly", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
-                    Text("Atlas downloads only Aniidex’s placement data and GLB assets. The website, ads and account UI are never loaded.")
+                    Label("Native build preview", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+                    Text(build.isLocal ? "Your custom layout and its block models are saved on this Mac and available offline.":"Placement data and 3D models are displayed natively. Source verification for build codes stays inside Atlas.")
                         .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 }
-                Link(destination: build.detailURL) {
-                    Label("View source & reveal code", systemImage: "arrow.up.right.square")
-                        .frame(maxWidth: .infinity)
-                }.buttonStyle(.bordered)
-                Text("Combo codes remain server-specific. Verify the RV requirement and owned furniture in game before importing.")
-                    .font(.caption2).foregroundStyle(.tertiary)
+                if !build.isLocal {
+                    HomelandBuildCodeView(server: build.server, number: build.number)
+                        .padding(14).atlasGlass(cornerRadius: 16)
+                } else {
+                    Label("Custom design · no website code needed",systemImage:"photo.artframe").font(.callout)
+                }
+                Text("Codes are server-specific. Furniture quantities, material costs and purchase checks are available in Pieces & costs.")
+                    .font(.caption2).foregroundStyle(.tertiary).fixedSize(horizontal: false, vertical: true)
+
             }.padding(16)
         }
     }

@@ -25,15 +25,10 @@ final class HomelandBuildStore: ObservableObject {
         error = nil
         defer { isLoading = false }
         do {
-            let first = try await service.fetchPage(server: server, page: 1)
-            var incoming = first.builds
-            if allPages, first.pageCount > 1 {
-                for page in 2...first.pageCount {
-                    status = "Syncing \(server.name) · page \(page) of \(first.pageCount)"
-                    let next = try await service.fetchPage(server: server, page: page)
-                    incoming.append(contentsOf: next.builds)
-                }
-            }
+            status = "Syncing \(server.name) layouts…"
+            let incoming: [HomelandBuild]
+            if allPages { incoming = try await service.fetchAll(server: server) }
+            else { incoming = try await service.fetchPage(server: server, page: 1).builds }
             merge(incoming, replacing: allPages ? server : nil)
             lastSynced = Date()
             status = allPages ? "Synced all \(incoming.count.formatted()) \(server.name) layouts" : "Loaded \(incoming.count) recent \(server.name) layouts"
@@ -52,14 +47,8 @@ final class HomelandBuildStore: ObservableObject {
         var incoming: [HomelandBuild] = []
         do {
             for server in HomelandServer.allCases {
-                let first = try await service.fetchPage(server: server, page: 1)
-                incoming.append(contentsOf: first.builds)
-                if first.pageCount > 1 {
-                    for page in 2...first.pageCount {
-                        status = "Syncing \(server.name) · page \(page) of \(first.pageCount)"
-                        incoming.append(contentsOf: try await service.fetchPage(server: server, page: page).builds)
-                    }
-                }
+                status = "Syncing \(server.name) layouts…"
+                incoming.append(contentsOf: try await service.fetchAll(server: server))
             }
             merge(incoming, replacing: nil, replaceEverything: true)
             lastSynced = Date()
@@ -74,7 +63,7 @@ final class HomelandBuildStore: ObservableObject {
     private func merge(_ incoming: [HomelandBuild], replacing server: HomelandServer?, replaceEverything: Bool = false) {
         var merged = replaceEverything ? [] : builds.filter { server == nil || $0.server != server }
         var byID = Dictionary(uniqueKeysWithValues: merged.map { ($0.id, $0) })
-        for build in incoming { byID[build.id] = build }
+        for build in incoming+HomelandLocalBuildService().load() { byID[build.id] = build }
         merged = Array(byID.values)
         builds = merged.sorted { lhs, rhs in
             if lhs.server != rhs.server { return lhs.server.name < rhs.server.name }
@@ -83,10 +72,9 @@ final class HomelandBuildStore: ObservableObject {
     }
 
     private func loadCache() {
-        guard let data = try? Data(contentsOf: cacheURL),
-              let cached = try? JSONDecoder().decode([HomelandBuild].self, from: data) else { return }
-        builds = cached
-        status = "Loaded \(cached.count.formatted()) cached layouts"
+        let cached=(try? Data(contentsOf:cacheURL)).flatMap{try? JSONDecoder().decode([HomelandBuild].self,from:$0)} ?? []
+        merge(cached,replacing:nil)
+        status = "Loaded \(builds.count.formatted()) saved layouts"
     }
 
     private func saveCache() {

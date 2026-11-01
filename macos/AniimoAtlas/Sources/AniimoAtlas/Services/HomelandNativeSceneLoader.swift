@@ -20,6 +20,13 @@ enum HomelandNativeSceneError: LocalizedError {
 struct HomelandNativeSceneLoader {
     var worldEnvironmentRoot: URL = HomelandWorldEnvironment.cacheRoot
     func load(_ package: HomelandScenePackage, progress: @escaping @Sendable (Int, Int) async -> Void) async throws -> SCNScene {
+        try Task.checkCancellation()
+        guard package.scene.plot.center.count >= 3, package.scene.plot.size.count >= 2,
+              package.scene.plot.center.allSatisfy({ $0.isFinite && Float($0).isFinite }),
+              package.scene.plot.size.allSatisfy({ $0.isFinite && $0 > 0 && Float($0).isFinite }),
+              package.scene.placements.values.allSatisfy({ rows in
+                  rows.allSatisfy { $0.count == 16 && $0.allSatisfy { $0.isFinite && Float($0).isFinite } }
+              }) else { throw HomelandNativeSceneError.loadFailed("Invalid scene dimensions or placement transform") }
         AniimoRegisterDracoPlugin()
         let output = SCNScene()
         output.background.contents = NSColor(calibratedRed: 0.045, green: 0.055, blue: 0.095, alpha: 1)
@@ -34,24 +41,62 @@ struct HomelandNativeSceneLoader {
         for (index, prefab) in entries.enumerated() {
             guard let url = package.modelFiles[prefab] else { throw HomelandNativeSceneError.missingModel(prefab) }
             await progress(index + 1, entries.count)
-            let asset = try await loadAsset(url)
-            let source = GLTFSCNSceneSource(asset: asset)
-            guard let sourceScene = source.defaultScene else { throw HomelandNativeSceneError.loadFailed(url.lastPathComponent) }
-            tuneMaterials(in: sourceScene.rootNode)
-            HomelandMaterialAdapter.apply(to: sourceScene.rootNode, prefab: prefab)
+            let prototype = try await HomelandModelPrototypeCache.shared.prototype(url: url, prefab: prefab) {
+                let asset = try await loadAsset(url)
+                let source = GLTFSCNSceneSource(asset: asset)
+                guard let scene = source.defaultScene else { throw HomelandNativeSceneError.loadFailed(url.lastPathComponent) }
+                tuneMaterials(in: scene.rootNode)
+                HomelandMaterialAdapter.apply(to: scene.rootNode, prefab: prefab)
+                return scene.rootNode
+            }
+            try Task.checkCancellation()
             let placements = package.scene.placements[prefab] ?? []
             for (ordinal, values) in placements.enumerated() {
+                try Task.checkCancellation()
+                guard values.count == 16, values.allSatisfy(\.isFinite) else {
+                    throw HomelandNativeSceneError.loadFailed("Invalid placement transform")
+                }
                 let instance = SCNNode()
                 let placementID = "\(prefab)#\(ordinal)"
                 instance.name = placementID
-                sourceScene.rootNode.childNodes.forEach { instance.addChildNode($0.clone()) }
+                prototype.childNodes.forEach { instance.addChildNode($0.clone()) }
                 instance.simdTransform = matrix(values)
                 contentRoot.addChildNode(instance)
             }
         }
-        addEnvironment(to: output, plot: package.scene.plot, contentRoot: contentRoot,
-                       calibration: package.worldCalibration)
+        if package.isAssetPreview { addAssetStudio(to: output, contentRoot: contentRoot) }
+        else { addEnvironment(to: output, plot: package.scene.plot, contentRoot: contentRoot,
+                       calibration: package.worldCalibration) }
         return output
+    }
+
+    private func addAssetStudio(to scene: SCNScene, contentRoot: SCNNode) {
+        let bounds = contentRoot.boundingBox
+        let center = SCNVector3((bounds.min.x + bounds.max.x) / 2,
+                               (bounds.min.y + bounds.max.y) / 2,
+                               (bounds.min.z + bounds.max.z) / 2)
+        let x = CGFloat(bounds.max.x - bounds.min.x), y = CGFloat(bounds.max.y - bounds.min.y), z = CGFloat(bounds.max.z - bounds.min.z)
+        let radius = max(0.08, sqrt(x*x + y*y + z*z) / 2)
+        let camera = SCNCamera()
+        camera.fieldOfView = 42
+        camera.automaticallyAdjustsZRange = true
+        camera.zNear = max(0.001, Double(radius / 1000))
+        camera.wantsHDR = true
+        camera.wantsExposureAdaptation = false
+        camera.exposureOffset = -0.25
+        let node = SCNNode()
+        node.name = "Homeland camera"
+        node.camera = camera
+        let distance = radius / sin(CGFloat(camera.fieldOfView) * .pi / 360) * 1.15
+        node.position = SCNVector3(center.x + distance * 0.62, center.y + distance * 0.48, center.z + distance * 0.62)
+        node.look(at: center)
+        scene.rootNode.addChildNode(node)
+        let ambient = SCNNode(); ambient.light = SCNLight(); ambient.light?.type = .ambient; ambient.light?.intensity = 220
+        scene.rootNode.addChildNode(ambient)
+        let key = SCNNode(); key.light = SCNLight(); key.light?.type = .directional; key.light?.intensity = 750
+        key.eulerAngles = SCNVector3(-0.9, 0.65, 0)
+        scene.rootNode.addChildNode(key)
+        scene.lightingEnvironment.intensity = 0.1
     }
 
     private func loadAsset(_ url: URL) async throws -> GLTFAsset {
@@ -120,29 +165,22 @@ struct HomelandNativeSceneLoader {
         if let world { scene.rootNode.addChildNode(world) }
         else { scene.rootNode.addChildNode(floorNode) }
 
-        if !hasOutdoorEnvironment {
+        // The grid is a building aid, not an environment substitute: show it
+        // whenever there's a flat plot to build on, grass textured or not.
+        if world == nil {
             addGrid(to: scene, center: plotCenter, width: plotWidth, depth: plotDepth)
         }
 
-        let ambient = SCNLight()
-        ambient.type = .ambient
-        ambient.intensity = 520
-        ambient.color = NSColor(calibratedWhite: 0.72, alpha: 1)
-        let ambientNode = SCNNode()
-        ambientNode.light = ambient
-        scene.rootNode.addChildNode(ambientNode)
-
-        let sun = SCNLight()
-        sun.type = .directional
-        sun.intensity = 1_250
-        sun.castsShadow = true
-        sun.shadowRadius = 10
-        sun.shadowSampleCount = 16
-        sun.shadowColor = NSColor.black.withAlphaComponent(0.42)
-        let sunNode = SCNNode()
-        sunNode.light = sun
-        sunNode.eulerAngles = SCNVector3(-0.9, 0.65, 0)
-        scene.rootNode.addChildNode(sunNode)
+        // A real, decimated Homeland terrain shape (decorative only -- see its own
+        // file header) ringing the exact, flat buildable plot. Absent gracefully if
+        // this Mac hasn't run the offline terrain/ground export.
+        if world == nil, hasOutdoorEnvironment {
+            let skirtHalfExtent = max(plotWidth, plotDepth) / 2
+            if let skirt = HomelandTerrainSkirt.load(plotHalfExtent: skirtHalfExtent) {
+                skirt.position = SCNVector3(plotCenter.x, plotCenter.y - 0.4, plotCenter.z)
+                scene.rootNode.addChildNode(skirt)
+            }
+        }
 
         let bounds = contentRoot.boundingBox
         let center = SCNVector3(
@@ -177,32 +215,52 @@ struct HomelandNativeSceneLoader {
             scene.fogStartDistance = 600
             scene.fogEndDistance = 8_000
         }
+
+        if hasOutdoorEnvironment {
+            let storedWeather = UserDefaults.standard.string(forKey: "homeland.weather")
+                .flatMap(HomelandWeather.init(rawValue:)) ?? .sunny
+            HomelandSkySystem.apply(to: scene, radius: max(radius, distance), weather: storedWeather)
+        }
     }
 
+    /// Minor lines every `spacing`, a brighter major line every 5th -- a legible
+    /// blueprint grid over either the dark fallback floor or real grass.
     private func addGrid(to scene: SCNScene, center: SCNVector3, width: CGFloat, depth: CGFloat) {
         let spacing = max(1, ceil(max(width, depth) / 40))
-        var vertices: [SCNVector3] = []
-        var x = -width / 2
+        var minor: [SCNVector3] = [], major: [SCNVector3] = []
+        func line(_ a: SCNVector3, _ b: SCNVector3, isMajor: Bool) {
+            if isMajor { major.append(a); major.append(b) } else { minor.append(a); minor.append(b) }
+        }
+        var x = -width / 2; var i = 0
         while x <= width / 2 + 0.001 {
-            vertices.append(SCNVector3(center.x + x, center.y + 0.002, center.z - depth / 2))
-            vertices.append(SCNVector3(center.x + x, center.y + 0.002, center.z + depth / 2))
-            x += spacing
+            line(SCNVector3(center.x + x, center.y + 0.003, center.z - depth / 2),
+                 SCNVector3(center.x + x, center.y + 0.003, center.z + depth / 2), isMajor: i % 5 == 0)
+            x += spacing; i += 1
         }
-        var z = -depth / 2
+        var z = -depth / 2; i = 0
         while z <= depth / 2 + 0.001 {
-            vertices.append(SCNVector3(center.x - width / 2, center.y + 0.002, center.z + z))
-            vertices.append(SCNVector3(center.x + width / 2, center.y + 0.002, center.z + z))
-            z += spacing
+            line(SCNVector3(center.x - width / 2, center.y + 0.003, center.z + z),
+                 SCNVector3(center.x + width / 2, center.y + 0.003, center.z + z), isMajor: i % 5 == 0)
+            z += spacing; i += 1
         }
-        let source = SCNGeometrySource(vertices: vertices)
-        let indices = Array(0..<vertices.count)
-        let element = SCNGeometryElement(indices: indices, primitiveType: .line)
-        let grid = SCNGeometry(sources: [source], elements: [element])
-        grid.firstMaterial?.lightingModel = .constant
-        grid.firstMaterial?.diffuse.contents = NSColor(calibratedRed: 0.49, green: 0.42, blue: 0.72, alpha: 0.24)
-        let node = SCNNode(geometry: grid)
-        node.name = "Placement grid"
-        node.castsShadow = false
-        scene.rootNode.addChildNode(node)
+        func node(_ vertices: [SCNVector3], color: NSColor) -> SCNNode? {
+            guard !vertices.isEmpty else { return nil }
+            let source = SCNGeometrySource(vertices: vertices)
+            let element = SCNGeometryElement(indices: Array(0..<vertices.count), primitiveType: .line)
+            let grid = SCNGeometry(sources: [source], elements: [element])
+            grid.firstMaterial?.lightingModel = .constant
+            grid.firstMaterial?.diffuse.contents = color
+            grid.firstMaterial?.isDoubleSided = true
+            grid.firstMaterial?.writesToDepthBuffer = false
+            let node = SCNNode(geometry: grid)
+            node.castsShadow = false
+            node.renderingOrder = 50
+            return node
+        }
+        let group = SCNNode()
+        group.name = "Placement grid"
+        if let n = node(minor, color: NSColor(calibratedWhite: 0.96, alpha: 0.16)) { group.addChildNode(n) }
+        if let n = node(major, color: NSColor(calibratedWhite: 0.99, alpha: 0.34)) { group.addChildNode(n) }
+        scene.rootNode.addChildNode(group)
     }
 }

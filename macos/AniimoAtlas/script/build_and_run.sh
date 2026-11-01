@@ -3,17 +3,21 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 MODE="${1:-run}"
 BUILD_DIR="${ANII_BUILD_DIR:-${TMPDIR:-/tmp}/aniimo-atlas-build}"
-STAGE_DIR="${TMPDIR:-/tmp}/aniimo-atlas-stage"
-mkdir -p "$STAGE_DIR"
+STAGE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/aniimo-atlas-stage.XXXXXX")"
+trap 'rm -rf "$STAGE_DIR"' EXIT
 # File Provider metadata on source resources prevents SwiftPM's generated
 # resource bundle from being signed in place. Stage clean copies for building.
 ditto --norsrc Sources "$STAGE_DIR/Sources"
 ditto --norsrc Tests "$STAGE_DIR/Tests"
 cp Package.swift "$STAGE_DIR/Package.swift"
+if [[ "$MODE" == "--test" ]]; then
+  ANII_OFFLINE=1 swift test --package-path "$STAGE_DIR" --scratch-path "$BUILD_DIR"
+  exit 0
+fi
 swift build --package-path "$STAGE_DIR" --scratch-path "$BUILD_DIR"
 BIN_DIR="$(swift build --package-path "$STAGE_DIR" --scratch-path "$BUILD_DIR" --show-bin-path)"
 PACKAGE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/aniimo-atlas-package.XXXXXX")"
-trap 'rm -rf "$PACKAGE_DIR"' EXIT
+trap 'rm -rf "$PACKAGE_DIR" "$STAGE_DIR"' EXIT
 PACKAGE_APP="$PACKAGE_DIR/AniimoAtlas.app"
 mkdir -p "$PACKAGE_APP/Contents/MacOS" "$PACKAGE_APP/Contents/Resources" "$PACKAGE_APP/Contents/Frameworks" "$PACKAGE_APP/Contents/Helpers"
 cp "$PWD/Assets/AppIcon.icns" "$PACKAGE_APP/Contents/Resources/AppIcon.icns"
@@ -29,9 +33,22 @@ if [[ -f "$CAPTURE_TOOL_ROOT/scan-lua-links.c" && -f "$CAPTURE_TOOL_ROOT/debugge
   clang -O2 -Wall -Wextra -Werror "$CAPTURE_TOOL_ROOT/scan-lua-links.c" -o "$PACKAGE_APP/Contents/Helpers/aniimo-lua-link-scan"
   codesign --force --sign - --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-lua-link-scan"
 fi
+# Read-only map capture is deliberately independent of native activation.
+swiftc -O -parse-as-library tools/owned-map-capture/main.swift Sources/AniimoAtlas/Models/HomelandOrnamentRecord.swift -o "$PACKAGE_APP/Contents/Helpers/aniimo-owned-map-capture"
+codesign --force --sign - --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-owned-map-capture"
+# Build-time tools only. Installed recovery uses these bundled binaries directly.
+python3 tools/connection-bootstrap/build.py probe-dll probe-host inventory
+python3 tools/connection-bootstrap/purchase/build.py probe-dll
+swiftc -O -parse-as-library tools/connection-bootstrap/bootstrap.swift Sources/AniimoAtlas/Models/HomelandOrnamentRecord.swift -o "$PACKAGE_APP/Contents/Helpers/aniimo-connection-bootstrap"
+codesign --force --sign - --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-connection-bootstrap"
+mkdir -p "$PACKAGE_APP/Contents/Resources/ConnectionSupport"
+cp tools/connection-bootstrap/purchase/probe-dll.dll "$PACKAGE_APP/Contents/Resources/ConnectionSupport/aniimo-purchase-registration.dll"
+cp tools/connection-bootstrap/probe-dll.dll "$PACKAGE_APP/Contents/Resources/ConnectionSupport/aniimo-connection.dll"
+cp tools/connection-bootstrap/probe-host.exe "$PACKAGE_APP/Contents/Resources/ConnectionSupport/aniimo-connection-host.exe"
+cp tools/connection-bootstrap/inventory.exe "$PACKAGE_APP/Contents/Resources/ConnectionSupport/aniimo-window-inventory.exe"
 install_name_tool -add_rpath "@executable_path/../Frameworks" "$PACKAGE_APP/Contents/MacOS/AniimoAtlas"
 cat > "$PACKAGE_APP/Contents/Info.plist" <<'PLIST'
-<?xml version="1.0" encoding="UTF-8"?><plist version="1.0"><dict><key>CFBundleExecutable</key><string>AniimoAtlas</string><key>CFBundleIdentifier</key><string>com.kevin.aniimoatlas</string><key>CFBundleName</key><string>Aniimo Atlas</string><key>CFBundleIconFile</key><string>AppIcon</string><key>CFBundlePackageType</key><string>APPL</string><key>LSMinimumSystemVersion</key><string>14.0</string><key>NSPrincipalClass</key><string>NSApplication</string></dict></plist>
+<?xml version="1.0" encoding="UTF-8"?><plist version="1.0"><dict><key>CFBundleExecutable</key><string>AniimoAtlas</string><key>CFBundleIdentifier</key><string>com.kevin.aniimoatlas</string><key>CFBundleName</key><string>AniiStudio</string><key>CFBundleDisplayName</key><string>AniiStudio</string><key>CFBundleIconFile</key><string>AppIcon</string><key>CFBundlePackageType</key><string>APPL</string><key>LSMinimumSystemVersion</key><string>14.0</string><key>NSPrincipalClass</key><string>NSApplication</string></dict></plist>
 PLIST
 codesign --force --sign - "$PACKAGE_APP/Contents/Frameworks/GLTFKit2.framework"
 codesign --force --sign - "$PACKAGE_APP"
@@ -42,5 +59,9 @@ APP="$HOME/Applications/AniimoAtlas.app"
 ditto --norsrc "$PACKAGE_APP" "$APP"
 if [[ "$MODE" == "--build" ]]; then exit 0; fi
 pkill -f "$APP/Contents/MacOS/AniimoAtlas" || true
-open -n "$APP"
+if [[ "$MODE" == "--offline" ]]; then
+  open -n "$APP" --env ANII_OFFLINE=1
+else
+  open -n "$APP"
+fi
 if [[ "$MODE" == "--verify" ]]; then sleep 2; pgrep -x AniimoAtlas; fi

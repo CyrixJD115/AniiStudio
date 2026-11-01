@@ -1,6 +1,7 @@
 import SwiftUI
 struct Creature: Codable, Identifiable, Hashable {
  let id, entryId, name, description, stage, role, family, availability, sourceURL: String
+ var regionNames: [String]? = nil
  let forms: [CreatureForm]
  let evolution: [Evolution]
  let evolutionConditions: [CatalogNote]
@@ -15,10 +16,12 @@ struct Creature: Codable, Identifiable, Hashable {
  }()
 }
 struct CreatureForm: Codable, Identifiable, Hashable {
+ var description: String? = nil
  let id, name, artURL: String
  let elements: [String]
  let appearances: [Appearance]
  let stats: [String: Double]
+ var abilitiesFromInstalledClient: Bool? = nil
  let skills, mobility: [Ability]
  let traits: [CatalogNote]
  var color: Color { elementColor(elements.first ?? "") }
@@ -30,9 +33,10 @@ struct Appearance: Codable, Identifiable, Hashable {
 struct Ability: Codable, Identifiable, Hashable {
  let id, name, description, kind: String
  let power, cost, cooldown: Double
+ var hasUnavailableValues: Bool? = nil
 }
 struct Evolution: Codable, Identifiable, Hashable { let id, name, stage: String }
-struct CatalogNote: Codable, Hashable { let name, description: String }
+struct CatalogNote: Codable, Hashable { let name, description: String; var hasUnavailableValues: Bool? = nil }
 func elementColor(_ name: String) -> Color {
  switch name { case "Fire": return .orange; case "Water", "Ice": return .cyan; case "Grass": return .green; case "Lightning", "Light": return .yellow; case "Dark": return .purple; case "Earth": return .brown; default: return .mint }
 }

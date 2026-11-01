@@ -15,7 +15,7 @@ struct HomelandRecipesView: View {
         catalog.items.filter {
             (search.isEmpty || "\($0.name) \($0.facility) \($0.ability ?? "")".localizedCaseInsensitiveContains(search)) &&
             (facility == "All facilities" || $0.facility == facility) &&
-            (!unlocked || $0.unlock <= store.rv) && (!($0.event) || events) &&
+            (!unlocked || (!$0.isExternalInput && $0.unlock <= store.rv)) && (!($0.event) || events) &&
             (!pinnedOnly || store.pinned.contains($0.id))
         }.sorted { a, b in
             if sort == "RV level", a.unlock != b.unlock { return a.unlock < b.unlock }
@@ -43,11 +43,11 @@ struct HomelandRecipesView: View {
                 sourceStatus
                 List(recipes, selection: $selection) { recipe in
                     HStack {
-                        Image(systemName: recipe.isByproduct ? "cube.transparent.fill" : recipe.isCrop ? "leaf.fill" : "gearshape.fill")
+                        HomelandItemIcon(name:recipe.name,recipeID:recipe.id,size:34)
                             .foregroundStyle(recipe.isByproduct ? .orange : recipe.isCrop ? .green : .teal)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(recipe.name).fontWeight(.medium)
-                            Text("\(recipe.facility) · \(recipe.event ? "Event" : "RV \(recipe.unlock)")").font(.caption).foregroundStyle(.secondary)
+                            Text(recipe.isExternalInput ? "External input · availability unverified" : "\(recipe.facility) · \(recipe.event ? "Period constraint" : "RV \(recipe.unlock)")").font(.caption).foregroundStyle(.secondary)
                         }
                         Spacer()
                         if store.pinned.contains(recipe.id) { Image(systemName: "pin.fill").foregroundStyle(.orange) }
@@ -94,7 +94,7 @@ private struct HomeRecipeDetail: View {
                     VStack(alignment: .leading, spacing: 5) {
                         Text(recipe.facility.uppercased()).font(.caption.bold()).foregroundStyle(.teal)
                         Text(recipe.name).font(.largeTitle.bold())
-                        Text("Facility level \(recipe.facilityLevel) · RV \(recipe.unlock)\(recipe.event ? " · Event recipe" : "")").foregroundStyle(.secondary)
+                        Text(recipe.isExternalInput ? "External input · acquisition not quoted" : "Facility level \(recipe.facilityLevel) · RV \(recipe.unlock)\(recipe.event ? " · Period constraint" : "")").foregroundStyle(.secondary)
                     }
                     Spacer()
                     Button { store.togglePin(recipe.id) } label: { Image(systemName: store.pinned.contains(recipe.id) ? "pin.fill" : "pin") }
@@ -103,7 +103,8 @@ private struct HomeRecipeDetail: View {
                 if recipe.unlock > store.rv { Label("Requires a higher RV level than your saved RV \(store.rv).", systemImage: "lock.fill").foregroundStyle(.orange) }
                 if !recipe.module.isEmpty { Label(recipe.moduleLabel, systemImage: "puzzlepiece.extension.fill") }
                 if !recipe.environment.isEmpty { Label("Climate: \(recipe.environment)", systemImage: "thermometer.medium") }
-                if recipe.event { Text("Event access and Recipe Notes may be required. Event seed costs use event currency; they are excluded from coin comparisons.").font(.callout).foregroundStyle(.secondary) }
+                ForEach(recipe.clientConditions ?? [], id: \.self) { Text($0).font(.callout).foregroundStyle(.secondary) }
+                if recipe.event && !recipe.isClientIndexed { Text("Event access and Recipe Notes may be required. Event seed costs use event currency; they are excluded from coin comparisons.").font(.callout).foregroundStyle(.secondary) }
                 if recipe.isByproduct { byproductSection } else { calculator }
                 if !recipe.ingredients.isEmpty {
                     GroupBox("Ingredients for \(homeNumber(batches)) batches") {
@@ -136,8 +137,8 @@ private struct HomeRecipeDetail: View {
                         }.padding(8)
                     }
                 }
-                Link("View this recipe on AniimoGuide", destination: recipe.sourceURL)
-                Text("Offline facts: Aniiland 2305638 / Aniimax 8ed3065. The live website applies additional game-data corrections. Times assume uninterrupted work; supply, food, hauling and climate setup can reduce actual output.")
+                if !recipe.isClientIndexed { Link("View this recipe on AniimoGuide", destination: recipe.sourceURL) }
+                Text(recipe.isClientIndexed ? "Indexed from installed client 3846247. Times assume uninterrupted work; food, travel, power and actual unlock conditions can reduce output. External acquisition costs are not invented." : "Offline facts: Aniiland 2305638 / Aniimax 8ed3065, with reviewed client work-rate corrections. Times assume uninterrupted work; supply, food, hauling and climate setup can reduce actual output.")
                     .font(.caption).foregroundStyle(.secondary)
             }.padding(24).frame(maxWidth: 850, alignment: .leading)
         }
@@ -174,7 +175,7 @@ private struct HomeRecipeDetail: View {
     private var byproductSection: some View {
         GroupBox("How to get \(recipe.name)") {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Collected alongside \(recipe.facility == "Mine" ? "mining" : "woodland") harvests. It has no standalone production timer.")
+                Text(recipe.isExternalInput ? "External input with unquoted acquisition cost. Check shops, drops or other sources in-game; no standalone production recipe is assumed." : "Collected alongside \(recipe.facility == "Mine" ? "mining" : "woodland") harvests. It has no standalone production timer.")
                 ForEach(catalog.producers(of: recipe.id).sorted { $0.unlock < $1.unlock }) { producer in
                     HStack {
                         Button(producer.name) { select(producer.id) }.buttonStyle(.link)

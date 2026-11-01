@@ -5,56 +5,62 @@ struct SidebarView: View {
  @Binding var element: String
  let collected: Int
  let favoriteCount: Int
- private var selection: Binding<String?> { Binding(get: { section }, set: { if let value = $0 { section = value } }) }
+ var caughtForms: Int = 0
+ @AppStorage("studio.appearance") private var appearance = "System"
+ @State private var hovered: String?
+ @Namespace private var selection
+ @Environment(\.accessibilityReduceMotion) private var reduceMotion
  private var total: Int { Creature.all.reduce(0) { $0 + $1.appearanceCount } }
  var body: some View {
-  VStack(spacing: 0) {
-   HStack(spacing: 12) {
-    Image(systemName: "sparkles.rectangle.stack.fill")
-     .font(.title3.weight(.semibold)).foregroundStyle(.white)
-     .frame(width: 38, height: 38)
-     .background(LinearGradient(colors: [.indigo, .purple, .pink], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 12))
-    VStack(alignment: .leading, spacing: 1) {
-     Text("Aniimo Atlas").font(.headline)
-     Text("Homeland creation suite").font(.caption2).foregroundStyle(.secondary)
-    }
-    Spacer(minLength: 0)
-   }.padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 18)
-   List(selection: selection) {
-    Section("Studio") {
-     destination("Homeland Studio", icon: "square.3.layers.3d.top.filled", tag: "Home Park")
-     destination("Dashboard", icon: "rectangle.3.group.fill", tag: "Home")
-    }
-    Section("Discover") {
-     destination("Aniilog", icon: "square.grid.2x2.fill", count: Creature.all.count)
+  VStack(alignment: .leading, spacing: 0) {
+   HStack(spacing: 11) {
+    ZStack { Circle().strokeBorder(StudioPalette.teal.opacity(0.4), lineWidth: 1.5).frame(width: 38, height: 38); Image(systemName: "leaf.circle.fill").font(.system(size: 28)).foregroundStyle(StudioPalette.teal) }
+    VStack(alignment: .leading, spacing: 2) { Text("AniiStudio").font(.system(size: 21, weight: .bold, design: .rounded)).tracking(-0.8); Text("YOUR WORLD, REIMAGINED").font(.system(size: 7.5, weight: .semibold)).tracking(1.2).foregroundStyle(.secondary) }
+   }.padding(.horizontal, 20).padding(.top, 26).padding(.bottom, 25)
+   ScrollView(showsIndicators: false) {
+    VStack(alignment: .leading, spacing: 3) {
+     heading("Expedition")
+     destination("Field journal", icon: "sun.horizon", tag: "Home")
+     destination("Aniilog", icon: "square.grid.2x2", count: Creature.all.count)
      destination("Prismana", icon: "sparkles")
-     destination("World map", icon: "map.fill")
+     destination("Update guide", icon: "checklist", count: UpdateAcquisitionGuide.current.forms.count)
+     destination("World map", icon: "map")
+     heading("Create & plan")
+     destination("Homeland Studio", icon: "house.lodge", tag: "Home Park")
      destination("Events", icon: "calendar")
-    }
-    Section("Your progress") {
-     destination("Collection", icon: "checkmark.seal.fill", count: collected)
-     destination("Favorites", icon: "star.fill", count: favoriteCount)
-     destination("Account & saves", icon: "person.crop.circle")
-    }
-    Section("Learn & connect") {
-     destination("Field Guides", icon: "book.closed.fill")
-     destination("Tools & resources", icon: "square.grid.2x2")
-    }
-    Section { destination("About & sources", icon: "info.circle") }
-   }.listStyle(.sidebar)
+     destination("Field Guides", icon: "book.closed")
+     destination("Tools & resources", icon: "slider.horizontal.3")
+     heading("Your discoveries")
+     destination("Collection", icon: "checkmark.seal", count: caughtForms)
+     destination("Favorites", icon: "heart", count: favoriteCount)
+     destination("Account & saves", icon: "externaldrive")
+     destination("About & sources", icon: "info.circle")
+    }.padding(.horizontal, 12)
+   }
    VStack(alignment: .leading, spacing: 9) {
-    HStack { Text("COLLECTION").font(.caption2.bold()).tracking(1.2); Spacer(); Text("\(collected) / \(total)").font(.caption.monospacedDigit()) }
-    ProgressView(value: Double(collected), total: Double(total)).tint(.purple)
-    Text("Saved on this Mac").font(.caption2).foregroundStyle(.tertiary)
-   }.padding(14).atlasGlass(cornerRadius: 14).padding(12)
-  }.navigationSplitViewColumnWidth(min: 195, ideal: 220, max: 245)
+    HStack { Image(systemName: "pawprint.fill").foregroundStyle(StudioPalette.teal); Text("Your discoveries").font(.system(size: 11, weight: .semibold)); Spacer(); Text("\(caughtForms)").font(.system(size: 15, weight: .bold, design: .rounded)) }
+    ProgressView(value: Double(collected), total: Double(max(1, total))).tint(StudioPalette.teal)
+    Text("\(collected) / \(total) appearances · Saved locally").font(.system(size: 9)).foregroundStyle(.secondary)
+    Menu { Picker("Appearance", selection: $appearance) { ForEach(["System", "Light", "Dark"], id: \.self) { Text($0).tag($0) } } } label: { Label("Appearance", systemImage: "circle.lefthalf.filled").font(.system(size: 9)).foregroundStyle(.secondary) }.menuStyle(.borderlessButton)
+   }.padding(16).background(.primary.opacity(0.025), in: RoundedRectangle(cornerRadius: 18)).padding(12)
+  }
  }
+ private func heading(_ text: String) -> some View { Text(text.uppercased()).font(.system(size: 8, weight: .semibold)).tracking(1.8).foregroundStyle(.secondary).padding(.horizontal, 12).padding(.top, 16).padding(.bottom, 7) }
  private func destination(_ title: String, icon: String, count: Int? = nil, tag: String? = nil) -> some View {
-  HStack(spacing: 11) {
-   Image(systemName: icon).symbolRenderingMode(.hierarchical).frame(width: 19)
-   Text(title).lineLimit(1)
-   Spacer(minLength: 2)
-   if let count { Text(count.formatted()).font(.caption).foregroundStyle(.secondary).monospacedDigit() }
-  }.padding(.vertical, 5).tag(tag ?? title)
+  let target = tag ?? title
+  return Button {
+   withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) { section = target }
+  } label: {
+   HStack(spacing: 11) {
+    Image(systemName: icon).font(.system(size: 14, weight: .medium)).frame(width: 20)
+    Text(title).font(.system(size: 12.5, weight: section == target ? .semibold : .medium))
+    Spacer(minLength: 0)
+    if let count { Text(count.formatted()).font(.system(size: 9, weight: .medium, design: .rounded)).foregroundStyle(.secondary) }
+    if section == target { Circle().fill(StudioPalette.teal).frame(width: 4, height: 4) }
+   }.foregroundStyle(section == target ? StudioPalette.teal : Color.primary.opacity(0.76))
+    .padding(.horizontal, 12).padding(.vertical, 10)
+    .background { if section == target { RoundedRectangle(cornerRadius: 13).fill(StudioPalette.teal.opacity(0.12)).matchedGeometryEffect(id: "navigation", in: selection) } else if hovered == target { RoundedRectangle(cornerRadius: 13).fill(.primary.opacity(0.045)) } }
+    .contentShape(RoundedRectangle(cornerRadius: 13))
+  }.buttonStyle(.plain).studioNavigationShortcut(target).onHover { inside in hovered = inside ? target : nil }.accessibilityLabel(title).accessibilityAddTraits(section == target ? [.isSelected] : [])
  }
 }

@@ -35,6 +35,19 @@ struct HomelandWorldEnvironment {
             .appendingPathComponent("AniimoAtlas/Environment/WorldContext", isDirectory: true)
     }
 
+    /// A renderer translation only, retained from the independently verified
+    /// scenery cache. Current furniture never has to match an old user build.
+    func savedCalibration(area: UInt8, root: URL = cacheRoot) -> HomelandWorldCalibration? {
+        guard let bytes=try? checkedData(root.appendingPathComponent("manifest.json"),limit:16*1024*1024),
+              let m=try? JSONDecoder().decode(Manifest.self,from:bytes),
+              m.schema=="aniimo-home-world-context-v1",m.area==area,
+              m.originX.isFinite,m.originZ.isFinite,abs(m.originX)<10000,abs(m.originZ)<10000,
+              m.sceneFile=="world.scn",validHash(m.sceneSHA256),
+              let world=try? checkedData(root.appendingPathComponent(m.sceneFile),limit:256*1024*1024),
+              digest(world)==m.sceneSHA256 else{return nil}
+        return .init(area:area,originX:m.originX,originZ:m.originZ)
+    }
+
     func load(calibration: HomelandWorldCalibration, root: URL = cacheRoot) throws -> SCNNode {
         let manifestData = try checkedData(root.appendingPathComponent("manifest.json"), limit: 16 * 1024 * 1024)
         let manifest = try JSONDecoder().decode(Manifest.self, from: manifestData)
