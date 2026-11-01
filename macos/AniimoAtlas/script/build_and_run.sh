@@ -2,6 +2,18 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 MODE="${1:-run}"
+# A stable certificate identity lets macOS retain Files & Folders consent across
+# rebuilds. Ad-hoc signatures change identity with every executable revision.
+SIGNING_IDENTITY="${ANII_SIGNING_IDENTITY:-}"
+if [[ -z "$SIGNING_IDENTITY" && "$MODE" != "--test" ]]; then
+  SIGNING_IDENTITY="$(security find-identity -v -p codesigning | awk '/Developer ID Application:/ {print $2; exit}')"
+  if [[ -z "$SIGNING_IDENTITY" ]]; then
+    echo 'No Developer ID certificate found. Set ANII_SIGNING_IDENTITY to a stable signing identity (or explicitly use - for an ad-hoc development build).' >&2
+    exit 1
+  fi
+fi
+SIGN_ARGS=(--force --sign "${SIGNING_IDENTITY:--}" --timestamp=none)
+
 BUILD_DIR="${ANII_BUILD_DIR:-${TMPDIR:-/tmp}/aniimo-atlas-build}"
 STAGE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/aniimo-atlas-stage.XXXXXX")"
 trap 'rm -rf "$STAGE_DIR"' EXIT
@@ -27,20 +39,20 @@ ditto --norsrc "$BIN_DIR/GLTFKit2.framework" "$PACKAGE_APP/Contents/Frameworks/G
 CAPTURE_TOOL_ROOT="${ANII_CAPTURE_TOOL_ROOT:-$PWD/tools/aniimo-memory-capture}"
 if [[ -f "$CAPTURE_TOOL_ROOT/scan.c" && -f "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" ]]; then
   clang -O2 -Wall -Wextra -Werror "$CAPTURE_TOOL_ROOT/scan.c" -o "$PACKAGE_APP/Contents/Helpers/aniimo-memory-scan"
-  codesign --force --sign - --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-memory-scan"
+  codesign "${SIGN_ARGS[@]}" --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-memory-scan"
 fi
 if [[ -f "$CAPTURE_TOOL_ROOT/scan-lua-links.c" && -f "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" ]]; then
   clang -O2 -Wall -Wextra -Werror "$CAPTURE_TOOL_ROOT/scan-lua-links.c" -o "$PACKAGE_APP/Contents/Helpers/aniimo-lua-link-scan"
-  codesign --force --sign - --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-lua-link-scan"
+  codesign "${SIGN_ARGS[@]}" --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-lua-link-scan"
 fi
 # Read-only map capture is deliberately independent of native activation.
 swiftc -O -parse-as-library tools/owned-map-capture/main.swift Sources/AniimoAtlas/Models/HomelandOrnamentRecord.swift -o "$PACKAGE_APP/Contents/Helpers/aniimo-owned-map-capture"
-codesign --force --sign - --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-owned-map-capture"
+codesign "${SIGN_ARGS[@]}" --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-owned-map-capture"
 # Build-time tools only. Installed recovery uses these bundled binaries directly.
 python3 tools/connection-bootstrap/build.py probe-dll probe-host inventory
 python3 tools/connection-bootstrap/purchase/build.py probe-dll
 swiftc -O -parse-as-library tools/connection-bootstrap/bootstrap.swift Sources/AniimoAtlas/Models/HomelandOrnamentRecord.swift -o "$PACKAGE_APP/Contents/Helpers/aniimo-connection-bootstrap"
-codesign --force --sign - --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-connection-bootstrap"
+codesign "${SIGN_ARGS[@]}" --entitlements "$CAPTURE_TOOL_ROOT/debugger-entitlements.plist" "$PACKAGE_APP/Contents/Helpers/aniimo-connection-bootstrap"
 mkdir -p "$PACKAGE_APP/Contents/Resources/ConnectionSupport"
 cp tools/connection-bootstrap/purchase/probe-dll.dll "$PACKAGE_APP/Contents/Resources/ConnectionSupport/aniimo-purchase-registration.dll"
 cp tools/connection-bootstrap/probe-dll.dll "$PACKAGE_APP/Contents/Resources/ConnectionSupport/aniimo-connection.dll"
@@ -50,8 +62,8 @@ install_name_tool -add_rpath "@executable_path/../Frameworks" "$PACKAGE_APP/Cont
 cat > "$PACKAGE_APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?><plist version="1.0"><dict><key>CFBundleExecutable</key><string>AniimoAtlas</string><key>CFBundleIdentifier</key><string>com.kevin.aniimoatlas</string><key>CFBundleName</key><string>AniiStudio</string><key>CFBundleDisplayName</key><string>AniiStudio</string><key>CFBundleIconFile</key><string>AppIcon</string><key>CFBundlePackageType</key><string>APPL</string><key>LSMinimumSystemVersion</key><string>14.0</string><key>NSPrincipalClass</key><string>NSApplication</string></dict></plist>
 PLIST
-codesign --force --sign - "$PACKAGE_APP/Contents/Frameworks/GLTFKit2.framework"
-codesign --force --sign - "$PACKAGE_APP"
+codesign "${SIGN_ARGS[@]}" "$PACKAGE_APP/Contents/Frameworks/GLTFKit2.framework"
+codesign "${SIGN_ARGS[@]}" "$PACKAGE_APP"
 codesign --verify --deep --strict "$PACKAGE_APP"
 mkdir -p "$PWD/dist" "$HOME/Applications"
 ditto -c -k --norsrc --keepParent "$PACKAGE_APP" "$PWD/dist/AniimoAtlas.app.zip"

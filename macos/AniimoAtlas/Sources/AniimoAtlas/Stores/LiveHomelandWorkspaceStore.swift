@@ -103,7 +103,7 @@ final class LiveHomelandWorkspaceStore: ObservableObject {
         if case .ready(let session) = previous,
            session.verification.referenceBuildID == "owning-map-area-\(area.rawValue)" {
             state = previous
-            refreshError = "Refresh could not finish. Showing the previous saved map; its capture time is unchanged."
+            refreshError = "Refresh could not finish: \(reason) Showing the previous saved map; its capture time is unchanged."
         } else { state = .failed(reason) }
     }
 

@@ -17,6 +17,7 @@ final class HomelandRefreshRecoveryTests: XCTestCase {
             XCTAssertEqual(recovered.captureURL, session.captureURL)
             XCTAssertEqual(recovered.capturedAt, date)
             XCTAssertNotNil(store.refreshError)
+            XCTAssertTrue(store.refreshError?.contains(CocoaError(.fileReadUnknown).localizedDescription) == true)
             XCTAssertFalse(store.isLoading)
         }
         await store.readCurrentGame(area: .residential)

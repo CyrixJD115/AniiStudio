@@ -26,6 +26,13 @@ struct HomelandOwnedCaptureEnvelope:Decodable {
     }
 }
 
+enum HomelandOwnedCaptureFailure: LocalizedError {
+    case helper(String)
+    var errorDescription: String? {
+        switch self { case .helper(let detail): return detail.isEmpty ? "The read-only map helper could not finish." : detail }
+    }
+}
+
 struct HomelandOwnedCaptureService {
     func capture() throws -> URL {
         let fm=FileManager.default,sessionURL=HomelandAutomaticConnectionService.configurationURL
@@ -41,11 +48,16 @@ struct HomelandOwnedCaptureService {
         let id=UUID().uuidString,temporary=folder.appendingPathComponent(".owned-\(id).json")
         defer{try? fm.removeItem(at:temporary)}
         let process=Process();process.executableURL=helper;process.arguments=[sessionURL.path,gameRoot,temporary.path,"--capture-owned"]
-        process.standardOutput=FileHandle.nullDevice;process.standardError=FileHandle.nullDevice
+        let diagnostics = Pipe()
+        process.standardOutput=FileHandle.nullDevice;process.standardError=diagnostics
         try process.run();let watchdog=DispatchWorkItem{if process.isRunning{process.terminate()}}
         DispatchQueue.global().asyncAfter(deadline:.now()+55,execute:watchdog)
         process.waitUntilExit();watchdog.cancel()
-        guard process.terminationStatus==0 else{throw LiveHomelandError.captureFailed}
+        let diagnosticBytes = diagnostics.fileHandleForReading.readDataToEndOfFile()
+        guard process.terminationStatus==0 else {
+            let detail = String(decoding:diagnosticBytes.prefix(1024),as:UTF8.self).trimmingCharacters(in:.whitespacesAndNewlines)
+            throw HomelandOwnedCaptureFailure.helper(detail)
+        }
         let bytes=try Data(contentsOf:temporary);guard bytes.count<=64*1024*1024 else{throw HomelandLiveCaptureError.unreadableCapture}
         let envelope=try JSONDecoder().decode(HomelandOwnedCaptureEnvelope.self,from:bytes)
         try envelope.validate(configuration:config)

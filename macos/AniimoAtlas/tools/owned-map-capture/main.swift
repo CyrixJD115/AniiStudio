@@ -184,6 +184,7 @@ func imageBase(_ memory:Memory,_ disk:Data) throws -> UInt64 {
    let hash=SHA256.hash(data:disk).map{String(format:"%02x",$0)}.joined()
    let profiles:[String:UInt64]=["ea3975a7246fdde2d11a2e0bbbdd5c28a8a6e45fd8b238185c1d80b9a1c8bc66":0x69b3e38,"8459d5d6466fb0f39f5bcd3edf75d1030ef4e53e431ea3d06de88815cf037ea2":0x6575dc0]
    guard let facade=profiles[hash] else {throw CaptureFailure()}
+   currentPhase="read-only game-process permission"
    let memory=try Memory(pid,facadeRVA:facade);currentPhase="mapped game image";let base=try imageBase(memory,disk)
    let records=try memory.ownedRecords(base,expected:expected)
    currentPhase="stable game session"
