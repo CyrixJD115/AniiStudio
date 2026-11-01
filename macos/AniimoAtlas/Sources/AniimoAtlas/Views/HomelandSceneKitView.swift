@@ -82,6 +82,12 @@ struct HomelandSceneKitView: NSViewRepresentable {
             coordinator?.nudge(dx: dx, dz: dz, dyawDegrees: dyaw, in: view)
         }
 
+        let touch = SceneDirectTouchController(view: view, allowsPan: true)
+        touch.tap = { [weak view] point in view?.onClick?(point) }
+        touch.beginMove = { [weak view] point in view?.onDragBegin?(point) ?? false }
+        touch.move = { [weak view] point in view?.onDragMove?(point, []) }
+        touch.endMove = { [weak view] commit in view?.onDragEnd?(commit) }
+        view.directTouch = touch
         return view
     }
 
@@ -340,6 +346,7 @@ struct HomelandSceneKitView: NSViewRepresentable {
 /// Press and release are told apart from camera drags by a small movement threshold,
 /// so orbiting never clears the selection.
 private final class HomelandHoverSceneView: SCNView {
+    var directTouch: SceneDirectTouchController?
     var onPointerMove: ((NSPoint?) -> Void)?
     var onClick: ((NSPoint) -> Void)?
     var onDoubleClick: ((NSPoint) -> Void)?
@@ -394,6 +401,7 @@ private final class HomelandHoverSceneView: SCNView {
     }
 
     func cancelObjectDrag() {
+        directTouch?.cancel()
         if objectDrag {NSCursor.pop();allowsCameraControl=true;onDragEnd?(false)}
         objectDrag=false;pressPoint=nil;movedPastThreshold=false
     }

@@ -14,7 +14,7 @@ struct CreatureStage3D: View {
  var body: some View {
   ZStack {
    RadialGradient(colors: [tint.opacity(0.16), Color.primary.opacity(0.015)], center: .center, startRadius: 10, endRadius: 300)
-   if let scene { CreatureSceneView(scene: scene, spin: spin && !reduceMotion).transition(.opacity) }
+   if let scene { CreatureSceneView(scene: scene, spin: spin && !reduceMotion, onInteraction: { spin = false }).transition(.opacity) }
    else if failed { Label("Model unavailable", systemImage: "cube.transparent").font(.caption).foregroundStyle(.secondary) }
    else { ProgressView().controlSize(.small) }
    VStack { Spacer(); HStack {
@@ -67,6 +67,10 @@ struct CreatureStage3D: View {
 }
 
 private final class FittedCreatureSCNView: SCNView {
+ var directTouch: SceneDirectTouchController?
+ override func viewWillMove(toWindow newWindow: NSWindow?) {
+  if newWindow == nil { directTouch?.cancel() }; super.viewWillMove(toWindow: newWindow)
+ }
  var fitScene: SCNScene?
  private var previousSize = CGSize.zero
  override func layout() {
@@ -79,6 +83,7 @@ private final class FittedCreatureSCNView: SCNView {
   guard let scene, let camera = scene.rootNode.childNode(withName:"camera",recursively:false),
         let marker = scene.rootNode.childNode(withName:"stageBounds",recursively:false) else { return }
   let radius = Float(marker.scale.x)
+  directTouch?.minimumZoom = max(0.5, radius * 1.25)
   let distance = CreatureStageBounds.cameraDistance(radius:radius,aspect:Float(max(1,bounds.width)/max(1,bounds.height)))
   camera.position = SCNVector3(0,0,distance); camera.look(at:SCNVector3Zero)
   pointOfView = camera
@@ -89,6 +94,7 @@ private final class FittedCreatureSCNView: SCNView {
 private struct CreatureSceneView: NSViewRepresentable {
  let scene: SCNScene
  let spin: Bool
+ var onInteraction: () -> Void
  func makeNSView(context: Context) -> SCNView {
   let view = FittedCreatureSCNView(); view.scene = scene; view.backgroundColor = .clear
   view.allowsCameraControl = true; view.cameraControlConfiguration.allowsTranslation = false; view.antialiasingMode = .multisampling4X; view.autoenablesDefaultLighting = false
@@ -96,11 +102,14 @@ private struct CreatureSceneView: NSViewRepresentable {
   view.defaultCameraController.maximumVerticalAngle = 80; view.defaultCameraController.minimumVerticalAngle = -5
   view.pointOfView = scene.rootNode.childNode(withName: "camera", recursively: false)
   view.fitCamera()
+  view.directTouch = SceneDirectTouchController(view: view, allowsPan: false)
+  view.directTouch?.interactionBegan = onInteraction
+  view.fitCamera()
   view.rendersContinuously = false
   return view
  }
  func updateNSView(_ view: SCNView, context: Context) {
-  if view.scene !== scene { view.scene = scene; (view as? FittedCreatureSCNView)?.fitCamera() }
+  if view.scene !== scene { (view as? FittedCreatureSCNView)?.directTouch?.cancel(); view.scene = scene; (view as? FittedCreatureSCNView)?.fitCamera() }
   let pivot = scene.rootNode.childNode(withName: "pivot", recursively: false)
   if spin { if pivot?.action(forKey: "spin") == nil { pivot?.runAction(.repeatForever(.rotateBy(x: 0, y: .pi * 2, z: 0, duration: 24)), forKey: "spin") } }
   else { pivot?.removeAction(forKey: "spin") }
